@@ -1,0 +1,4 @@
+node_modules
+dist
+database/**/*.js
+package-lock.json
