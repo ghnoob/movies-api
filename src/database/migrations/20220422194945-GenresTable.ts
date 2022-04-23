@@ -2,9 +2,7 @@ import { col, fn, DataTypes, QueryInterface } from 'sequelize';
 
 const migration = {
   async up(queryInterface: QueryInterface) {
-    const transaction = await queryInterface.sequelize.transaction();
-
-    try {
+    await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.createTable(
         'genres',
         {
@@ -28,25 +26,15 @@ const migration = {
         fields: [fn('lower', col('name'))],
         transaction,
       });
-
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
+    });
   },
 
   async down(queryInterface: QueryInterface) {
-    const transaction = await queryInterface.sequelize.transaction();
-
-    try {
-      await queryInterface.removeIndex('genres', 'unique_name');
-      await queryInterface.dropTable('genres');
-      await transaction.commit();
-    } catch (err) {
-      await transaction.rollback();
-      throw err;
-    }
+    await queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.removeIndex('genres', 'unique_name', {
+        transaction,
+      });
+    });
   },
 };
 
