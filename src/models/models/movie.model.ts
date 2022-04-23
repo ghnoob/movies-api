@@ -1,10 +1,12 @@
-import { BelongsTo, Column, CreatedAt, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import Character from './character.model';
 import Genre from './genre.model';
+import MovieCharacter from './movie-character.model';
 
 /**
  * Represents a movie or series.
  */
-@Table({ tableName: 'movie', updatedAt: false })
+@Table({ tableName: 'movies', updatedAt: false })
 export default class Movie extends Model {
   /**
    * Title of the movie.
@@ -55,4 +57,10 @@ export default class Movie extends Model {
    */
   @CreatedAt
   createdAt!: Date;
+
+  /**
+   * List of characters of the movie.
+   */
+  @BelongsToMany(() => Character, () => MovieCharacter)
+  characters!: Character[];
 }

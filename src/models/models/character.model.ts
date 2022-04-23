@@ -1,4 +1,6 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import MovieCharacter from './movie-character.model';
+import Movie from './movie.model';
 
 /**
  * Represents a character who appears in a movie or series.
@@ -39,4 +41,10 @@ export default class Character extends Model {
    */
   @Column(DataType.STRING(1000))
   history!: string;
+
+  /**
+   * List of movies that the character participated on.
+   */
+  @BelongsToMany(() => Movie, () => MovieCharacter)
+  movies!: Movie[];
 }
