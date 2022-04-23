@@ -2,8 +2,8 @@ FROM node:16.14.2-alpine3.15
 
 WORKDIR /usr/app
 
-COPY package*.json ./
+COPY ["package.json", "yarn.lock", "./"]
 
-RUN npm install
+RUN yarn install
 
 COPY . .
