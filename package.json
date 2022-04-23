@@ -7,8 +7,8 @@
   "license": "GPL 3.0",
   "private": true,
   "scripts": {
-    "prebuild": "rm -rf ./dist",
-    "build": "tsc",
+    "build": "rm -rf ./dist && tsc",
+    "build:database": "rm -rf dist && tsc -p ./tsconfig.database-only.json",
     "format": "prettier --write ./src",
     "lint": "eslint --fix ./src",
     "migration:generate": "ts-node ./database/generate-migration.ts",
