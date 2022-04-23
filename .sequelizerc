@@ -1,0 +1,10 @@
+const { config } = require('dotenv');
+const { join } = require('path');
+
+config();
+
+module.exports = {
+  'config': join(__dirname, 'dist', 'config', 'db.config.js'),
+  'migrations-path': join(__dirname, 'dist', 'database', 'migrations'),
+  'seeders-path': join(__dirname, 'dist', 'database', 'seeders'),
+};
