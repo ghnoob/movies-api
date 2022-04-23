@@ -17,7 +17,7 @@ const migration = {
           type: DataTypes.INTEGER,
           allowNull: false,
           references: {
-            model: 'genre',
+            model: 'genres',
             key: 'id',
           },
         },
