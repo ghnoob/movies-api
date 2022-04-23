@@ -1,5 +1,6 @@
 import { col, fn } from 'sequelize'
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import Movie from './movie.model';
 
 /**
  * Reprensents the genre of a movie or series.
@@ -29,4 +30,10 @@ export default class Genre extends Model {
    */
   @Column(DataType.STRING(2048))
   imageUrl!: string;
+
+  /**
+   * List of movies that belong to the genre.
+   */
+  @HasMany(() => Movie)
+  movies!: Movie[];
 }
