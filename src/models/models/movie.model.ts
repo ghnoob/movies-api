@@ -1,4 +1,15 @@
-import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, Model, AllowNull, Table } from 'sequelize-typescript';
+import { col, fn } from 'sequelize';
+import {
+  BelongsTo,
+  BelongsToMany,
+  Column,
+  CreatedAt,
+  DataType,
+  ForeignKey,
+  Model,
+  AllowNull,
+  Table,
+} from 'sequelize-typescript';
 import Character from './character.model';
 import Genre from './genre.model';
 import MovieCharacter from './movie-character.model';
@@ -6,7 +17,17 @@ import MovieCharacter from './movie-character.model';
 /**
  * Represents a movie or series.
  */
-@Table({ tableName: 'movies', updatedAt: false })
+@Table({
+  tableName: 'movies',
+  updatedAt: false,
+  indexes: [
+    {
+      name: 'title_idx',
+      fields: [fn('to_tsvector', 'english', col('title'))],
+      using: 'gin',
+    },
+  ],
+})
 export default class Movie extends Model {
   /**
    * Title of the movie.

@@ -1,11 +1,29 @@
-import { BelongsToMany, Column, DataType, Model, AllowNull, Table } from 'sequelize-typescript';
+import { col, fn } from 'sequelize';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  Model,
+  AllowNull,
+  Table,
+} from 'sequelize-typescript';
 import MovieCharacter from './movie-character.model';
 import Movie from './movie.model';
 
 /**
  * Represents a character who appears in a movie or series.
  */
-@Table({ tableName: 'characters', timestamps: false })
+@Table({
+  tableName: 'characters',
+  timestamps: false,
+  indexes: [
+    {
+      name: 'name_idx',
+      fields: [fn('to_tsvector', 'english', col('name'))],
+      using: 'gin',
+    },
+  ],
+})
 export default class Character extends Model {
   /**
    * Character's name.
