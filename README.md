@@ -21,6 +21,7 @@ You can access the Swagger UI page at `/api`.
 
 Since the migrations are written in TypeScript, you should compile them first using one of the
 following commands:
+
 ```bash
 # Compile database folder only
 

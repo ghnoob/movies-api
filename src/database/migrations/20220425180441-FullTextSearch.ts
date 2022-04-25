@@ -23,9 +23,11 @@ const migration = {
     await queryInterface.sequelize.transaction(async (transaction) => {
       await queryInterface.removeIndex('movies', 'title_idx', { transaction });
 
-      await queryInterface.removeIndex('characters', 'name_idx', { transaction });
+      await queryInterface.removeIndex('characters', 'name_idx', {
+        transaction,
+      });
     });
-  }
+  },
 };
 
 export default migration;

@@ -1,5 +1,12 @@
-import { col, fn } from 'sequelize'
-import { Column, DataType, HasMany, Model, AllowNull, Table } from 'sequelize-typescript';
+import { col, fn } from 'sequelize';
+import {
+  Column,
+  DataType,
+  HasMany,
+  Model,
+  AllowNull,
+  Table,
+} from 'sequelize-typescript';
 import Movie from './movie.model';
 
 /**
@@ -8,11 +15,13 @@ import Movie from './movie.model';
 @Table({
   tableName: 'genres',
   timestamps: false,
-  indexes: [{
-    unique: true,
-    name: 'unique_name',
-    fields: [fn('lower', col('name'))],
-  }],
+  indexes: [
+    {
+      unique: true,
+      name: 'unique_name',
+      fields: [fn('lower', col('name'))],
+    },
+  ],
 })
 export default class Genre extends Model {
   /**

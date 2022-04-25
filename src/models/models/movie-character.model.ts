@@ -9,9 +9,9 @@ import Movie from './movie.model';
 export default class MovieCharacter extends Model {
   @ForeignKey(() => Movie)
   @Column
-  movieId!: number
+  movieId!: number;
 
   @ForeignKey(() => Character)
   @Column
-  characterId!: number
+  characterId!: number;
 }
