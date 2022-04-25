@@ -7,7 +7,7 @@ Manages information about movies, series and its characters.
 ## Start the app
 
 ```bash
-npm install
+yarn install
 
 # for debug mode: docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build -d
 docker-compose up --build -d
