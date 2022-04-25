@@ -34,6 +34,8 @@ const migration = {
       await queryInterface.removeIndex('genres', 'unique_name', {
         transaction,
       });
+
+      await queryInterface.dropTable('genres', { transaction });
     });
   },
 };
