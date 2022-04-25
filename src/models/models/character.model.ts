@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, AllowNull, Table } from 'sequelize-typescript';
 import MovieCharacter from './movie-character.model';
 import Movie from './movie.model';
 
@@ -12,6 +12,7 @@ export default class Character extends Model {
    *
    * @example 'Simba'
    */
+  @AllowNull(false)
   @Column(DataType.STRING(30))
   name!: string;
 
@@ -21,26 +22,26 @@ export default class Character extends Model {
    * @example 'https://upload.wikimedia.org/wikipedia/en/9/94/Simba_%28_Disney_character_-_adult%29.png'
    */
   @Column(DataType.STRING(2048))
-  imageUrl!: string;
+  imageUrl!: string | null;
 
   /**
    * Character's age, in years.
    */
   @Column(DataType.INTEGER)
-  age!: number;
+  age!: number | null;
 
   /**
    * Character's weight, in kilograms.
    */
   @Column(DataType.INTEGER)
-  weight!: number;
+  weight!: number | null;
 
   /**
    * Character's backstory and/or a summary of the character's involvement in the
    * productions they took part of.
    */
   @Column(DataType.STRING(1000))
-  history!: string;
+  history!: string | null;
 
   /**
    * List of movies that the character participated on.

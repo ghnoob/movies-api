@@ -1,4 +1,4 @@
-import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, BelongsToMany, Column, CreatedAt, DataType, ForeignKey, Model, AllowNull, Table } from 'sequelize-typescript';
 import Character from './character.model';
 import Genre from './genre.model';
 import MovieCharacter from './movie-character.model';
@@ -13,6 +13,7 @@ export default class Movie extends Model {
    *
    * @example 'The Lion King'
    */
+  @AllowNull(false)
   @Column(DataType.STRING(100))
   title!: string;
 
@@ -22,7 +23,7 @@ export default class Movie extends Model {
    * @example 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg'
    */
   @Column(DataType.STRING(2048))
-  imageUrl!: string;
+  imageUrl!: string | null;
 
   /**
    * Id of the movie's genre.
@@ -30,6 +31,7 @@ export default class Movie extends Model {
    * @example 1
    */
   @ForeignKey(() => Genre)
+  @AllowNull(false)
   @Column
   genreId!: number;
 
@@ -48,7 +50,7 @@ export default class Movie extends Model {
    * @example 4.7
    */
   @Column(DataType.DECIMAL(2, 1))
-  rating!: number;
+  rating!: number | null;
 
   /**
    * Date when the movie was added to the database.

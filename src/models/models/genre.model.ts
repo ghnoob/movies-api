@@ -1,5 +1,5 @@
 import { col, fn } from 'sequelize'
-import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, AllowNull, Table } from 'sequelize-typescript';
 import Movie from './movie.model';
 
 /**
@@ -20,6 +20,7 @@ export default class Genre extends Model {
    *
    * @example 'Drama'
    */
+  @AllowNull(false)
   @Column(DataType.STRING(30))
   name!: string;
 
@@ -29,7 +30,7 @@ export default class Genre extends Model {
    * @example 'https://upload.wikimedia.org/wikipedia/commons/1/10/Drama_Masks.svg'
    */
   @Column(DataType.STRING(2048))
-  imageUrl!: string;
+  imageUrl!: string | null;
 
   /**
    * List of movies that belong to the genre.
