@@ -1,4 +1,6 @@
 import 'reflect-metadata';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 import { config } from 'dotenv';
 import { Sequelize } from 'sequelize-typescript';
 
@@ -16,6 +18,7 @@ async function bootstrap() {
 
     if (appConfig.ENVIRONMENT !== 'production') {
       await db.sync({ force: true });
+      await promisify(exec)('npx sequelize db:seed:all');
     }
 
     logger.info('Database connected.');
