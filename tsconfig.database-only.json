@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig",
+  "include": ["./src/database", "./src/config/db.config.ts"]
+}

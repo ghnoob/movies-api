@@ -17,24 +17,32 @@ docker-compose up --build -d
 
 You can access the Swagger UI page at `/api`.
 
-## Generating database migrations
+## Running migrations
 
-Since the models are difined with
-[sequelize-typescript](https://www.npmjs.com/package/sequelize-typescript),
-The project uses
-[sequelize-typescript-model-migration](https://www.npmjs.com/package/sequelize-typescript-model-migration)
-to generate migration files from models.<br>
-If you want to generate a new migration:
+Since the migrations are written in TypeScript, you should compile them first using one of the
+following commands:
 
 ```bash
-# npm
-npm run migration:generate -- migrationName
+# Compile database folder only
 
-# yarn
-yarn migration:generate migrationName
+## npm
+npm run build:database
+
+## yarn
+yarn build:database
+
+
+# Compile whole project (so you can run the project using `node ./dist/index.js` too)
+
+## npm
+npm run build
+
+## yarn
+yarn build
 ```
 
-Then you can use `sequelize-cli` to apply them as usual.
+Then you can use [sequelize-cli](https://www.npmjs.com/package/sequelize-cli) (inside the
+docker container) to apply them as usual.
 
 ## Info
 
