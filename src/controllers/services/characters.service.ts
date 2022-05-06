@@ -28,4 +28,13 @@ export default class CharactersService {
   ): Promise<[affectedCount: number]> {
     return Character.update({ ...dto }, { where: { id } });
   }
+
+  /**
+   * Deletes a character.
+   *
+   * @returns The number of deleted characters (0 or 1).
+   */
+  delete(id: number): Promise<number> {
+    return Character.destroy({ where: { id } });
+  }
 }
