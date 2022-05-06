@@ -6,9 +6,7 @@ import CharactersService from './services/characters.service';
 
 @Service()
 export default class CharactersController {
-  constructor(private readonly service: CharactersService) {
-    console.log(this.service);
-  }
+  constructor(private readonly service: CharactersService) {}
 
   /**
    * Creates a new character.
