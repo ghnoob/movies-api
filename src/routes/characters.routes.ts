@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
 import validateRequest from '../middlewares/validate-body.middleware';
 import CharactersController from '../controllers/characters.controller';
+import IdParamDto from '../models/dto/id-param.dto';
 import CreateCharacterDto from '../models/dto/characters/create-character.dto';
 import UpdateCharacterDto from '../models/dto/characters/update-character.dto';
 import CommonRoutes from './common.routes';
@@ -24,6 +25,7 @@ export default class CharactersRoutes extends CommonRoutes {
     this.router.patch(
       '/:id',
       authenticateJwt,
+      validateRequest(IdParamDto, 'params'),
       validateRequest(UpdateCharacterDto),
       this.controller.update.bind(this.controller),
     );
@@ -31,6 +33,7 @@ export default class CharactersRoutes extends CommonRoutes {
     this.router.delete(
       '/:id',
       authenticateJwt,
+      validateRequest(IdParamDto, 'params'),
       this.controller.delete.bind(this.controller),
     );
   }
