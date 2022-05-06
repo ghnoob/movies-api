@@ -3,7 +3,7 @@ import { Strategy } from 'passport-local';
 import { UniqueConstraintError } from 'sequelize';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
-import User from '../models/models/user.model';
+import User from '../models/user.model';
 
 passport.use(
   'register',
