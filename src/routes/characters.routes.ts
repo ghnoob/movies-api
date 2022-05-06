@@ -27,5 +27,11 @@ export default class CharactersRoutes extends CommonRoutes {
       validateBody(UpdateCharacterDto),
       this.controller.update.bind(this.controller),
     );
+
+    this.router.delete(
+      '/:id',
+      authenticateJwt,
+      this.controller.delete.bind(this.controller),
+    );
   }
 }
