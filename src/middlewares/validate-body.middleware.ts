@@ -4,17 +4,21 @@ import { Request, Response, NextFunction } from 'express';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
 
+type RequestField = 'body' | 'params' | 'query';
+
 /**
- * Middleware for validating the request body.
- * @param c Class to validate the body against.
- * @param [whitelist=true] if set to true (default), the validator will strip the properties
- * not defined in the validator class from the request body.
+ * Middleware for validating the request.
+ * @param c Class to validate the field against.
+ * @param field Request field to validate. Default 'body'
+ * @param whitelist if set to true (default), the validator will strip the properties
+ * not defined in the validator class from the request field.
  *
- * If the validation was successful, `req.body` will be set to an instance of the validator class.
+ * If the validation was successful, the field will be set to an instance of the validator class.
  * Else it will pass thw validation error to the error handler.
  */
-export default function validateBody(
+export default function validateRequest(
   c: ClassConstructor<object>,
+  field: RequestField = 'body',
   whitelist = true,
 ) {
   return async function transformAndValidate(
@@ -22,7 +26,7 @@ export default function validateBody(
     _res: Response,
     next: NextFunction,
   ) {
-    const toValidate = plainToInstance(c, req.body ?? {}, {
+    const toValidate = plainToInstance(c, req[field] ?? {}, {
       exposeUnsetFields: false,
       excludeExtraneousValues: true,
     });
@@ -39,7 +43,7 @@ export default function validateBody(
       return next(error);
     }
 
-    req.body = toValidate;
+    req[field] = toValidate;
 
     return next();
   };
