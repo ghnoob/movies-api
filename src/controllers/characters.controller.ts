@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
+import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
 import CharactersService from './services/characters.service';
 
@@ -9,6 +10,9 @@ export default class CharactersController {
     console.log(this.service);
   }
 
+  /**
+   * Creates a new character.
+   */
   async create(
     req: Request,
     res: Response,
@@ -18,6 +22,30 @@ export default class CharactersController {
       const character = await this.service.create(req.body);
 
       return res.status(HttpStatus.CREATED).json({ id: character.id });
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * Updates an existing chartacter
+   */
+  async update(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const [affectedCount] = await this.service.update(
+        Number(req.params.id),
+        req.body,
+      );
+
+      if (!affectedCount) {
+        return next(new HttpError(HttpStatus.NOT_FOUND, 'Character not found'));
+      }
+
+      return res.status(HttpStatus.OK).json({ message: 'Character updated.' });
     } catch (err) {
       return next(err);
     }
