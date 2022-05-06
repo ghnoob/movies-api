@@ -20,13 +20,17 @@ export default class CharactersService {
   /**
    * Updates a character.
    *
-   * @returns An array with the number o affected db rows.
+   * @returns The updated entity, or `null` if it was not found.
    */
-  update(
-    id: number,
-    dto: UpdateCharacterDto,
-  ): Promise<[affectedCount: number]> {
-    return Character.update({ ...dto }, { where: { id } });
+  async update(id: number, dto: UpdateCharacterDto): Promise<Character | null> {
+    const character = await Character.findOne({ where: { id } });
+
+    if (character) {
+      character.setAttributes(dto);
+      await character.save();
+    }
+
+    return character;
   }
 
   /**

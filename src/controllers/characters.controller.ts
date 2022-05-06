@@ -36,12 +36,12 @@ export default class CharactersController {
     next: NextFunction,
   ): Promise<Response | void> {
     try {
-      const [affectedCount] = await this.service.update(
+      const updated = await this.service.update(
         Number(req.params.id),
         req.body,
       );
 
-      if (!affectedCount) {
+      if (!updated) {
         return next(
           new HttpError(HttpStatus.NOT_FOUND, 'Character not found.'),
         );
