@@ -24,6 +24,7 @@ export default function validateBody(
   ) {
     const toValidate = plainToInstance(c, req.body ?? {}, {
       exposeUnsetFields: false,
+      excludeExtraneousValues: true,
     });
 
     const validationErrors = await validate(toValidate, { whitelist });
@@ -31,7 +32,9 @@ export default function validateBody(
     if (validationErrors.length > 0) {
       const error = new HttpError(HttpStatus.BAD_REQUEST, {
         description: 'Validation error.',
-        errors: validationErrors,
+        errors: validationErrors.flatMap((err) =>
+          Object.values(err.constraints as Record<string, string>),
+        ),
       });
       return next(error);
     }
