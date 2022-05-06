@@ -5,6 +5,7 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import { setup, serve } from 'swagger-ui-express';
 import { Container } from 'typedi';
 import AuthRoutes from './routes/auth.routes';
+import CharactersRoutes from './routes/characters.routes';
 import CommonRoutes from './routes/common.routes';
 import errorHandler from './middlewares/error-handler.middleware';
 import errorLogger from './middlewares/error-logger.middleware';
@@ -24,7 +25,7 @@ app.use('/api', serve, setup(swaggerJSDoc(swaggerConfig)));
 
 app.use(requestLogger);
 
-Container.import([AuthRoutes]);
+Container.import([AuthRoutes, CharactersRoutes]);
 const routes: CommonRoutes[] = Container.getMany('routes');
 
 routes.forEach((route) => {
