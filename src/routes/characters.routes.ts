@@ -3,6 +3,7 @@ import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
 import validateBody from '../middlewares/validate-body.middleware';
 import CharactersController from '../controllers/characters.controller';
 import CreateCharacterDto from '../models/dto/characters/create-character.dto';
+import UpdateCharacterDto from '../models/dto/characters/update-character.dto';
 import CommonRoutes from './common.routes';
 
 @Service({ id: 'routes', multiple: true })
@@ -18,6 +19,13 @@ export default class CharactersRoutes extends CommonRoutes {
       authenticateJwt,
       validateBody(CreateCharacterDto),
       this.controller.create.bind(this.controller),
+    );
+
+    this.router.patch(
+      '/:id',
+      authenticateJwt,
+      validateBody(UpdateCharacterDto),
+      this.controller.update.bind(this.controller),
     );
   }
 }
