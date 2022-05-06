@@ -1,5 +1,6 @@
 import { Service } from 'typedi';
 import CreateCharacterDto from '../../models/dto/characters/create-character.dto';
+import UpdateCharacterDto from '../../models/dto/characters/update-character.dto';
 import Character from '../../models/character.model';
 
 /**
@@ -14,5 +15,17 @@ export default class CharactersService {
    */
   create(dto: CreateCharacterDto): Promise<Character> {
     return Character.create({ ...dto });
+  }
+
+  /**
+   * Updates a character.
+   *
+   * @returns An array with the number o affected db rows.
+   */
+  update(
+    id: number,
+    dto: UpdateCharacterDto,
+  ): Promise<[affectedCount: number]> {
+    return Character.update({ ...dto }, { where: { id } });
   }
 }
