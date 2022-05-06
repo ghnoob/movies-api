@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
-import validateBody from '../middlewares/validate-body.middleware';
+import validateRequest from '../middlewares/validate-body.middleware';
 import CharactersController from '../controllers/characters.controller';
 import CreateCharacterDto from '../models/dto/characters/create-character.dto';
 import UpdateCharacterDto from '../models/dto/characters/update-character.dto';
@@ -17,14 +17,14 @@ export default class CharactersRoutes extends CommonRoutes {
     this.router.post(
       '/',
       authenticateJwt,
-      validateBody(CreateCharacterDto),
+      validateRequest(CreateCharacterDto),
       this.controller.create.bind(this.controller),
     );
 
     this.router.patch(
       '/:id',
       authenticateJwt,
-      validateBody(UpdateCharacterDto),
+      validateRequest(UpdateCharacterDto),
       this.controller.update.bind(this.controller),
     );
 
