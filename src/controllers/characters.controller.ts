@@ -28,7 +28,7 @@ export default class CharactersController {
   }
 
   /**
-   * Updates an existing chartacter
+   * Updates an existing chartacter.
    */
   async update(
     req: Request,
@@ -42,10 +42,35 @@ export default class CharactersController {
       );
 
       if (!affectedCount) {
-        return next(new HttpError(HttpStatus.NOT_FOUND, 'Character not found'));
+        return next(
+          new HttpError(HttpStatus.NOT_FOUND, 'Character not found.'),
+        );
       }
 
       return res.status(HttpStatus.OK).json({ message: 'Character updated.' });
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * Deletes a character.
+   */
+  async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const deleted = await this.service.delete(Number(req.params.id));
+
+      if (!deleted) {
+        return next(
+          new HttpError(HttpStatus.NOT_FOUND, 'Character not found.'),
+        );
+      }
+
+      return res.status(HttpStatus.OK).json({ message: 'Character deleted.' });
     } catch (err) {
       return next(err);
     }
