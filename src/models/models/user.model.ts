@@ -1,4 +1,4 @@
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { col, fn } from 'sequelize';
 import {
   BeforeCreate,
@@ -35,5 +35,23 @@ export default class User extends Model {
   @BeforeCreate
   static async hashPassword(instance: User) {
     instance.password = await hash(instance.password, 10);
+  }
+
+  /**
+   * Checks if a combination of user and password exists.
+   *
+   * @returns The found `User` or `null` if the login credentials are invalid.
+   */
+  static async checkUser(
+    email: string,
+    password: string,
+  ): Promise<User | null> {
+    const user = await User.findOne({ where: { email } });
+
+    if (user && !(await compare(password, user.password))) {
+      return null;
+    }
+
+    return user;
   }
 }
