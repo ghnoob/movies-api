@@ -13,7 +13,7 @@ const dbConfig: SequelizeOptions = {
   username: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASS || 'admin',
   logging: logger.debug.bind(logger),
-  models: [join(__dirname, '..', 'models', 'models')],
+  models: [join(__dirname, '..', 'models')],
 };
 
 // has to be exported this way so sequelize-cli is able to read it
