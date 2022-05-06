@@ -12,6 +12,7 @@ import fallbackErrorTransformer from './middlewares/fallback-error-transformer.m
 import logger from './logger';
 import requestLogger from './middlewares/request-logger.middleware';
 import swaggerConfig from './config/swagger.config';
+import syntaxErrorHandler from './middlewares/syntax-error-handler.middleware';
 
 const app = express();
 
@@ -30,6 +31,8 @@ routes.forEach((route) => {
   app.use(route.getBasePath(), route.getRouter());
   logger.info(`Routes configured for ${route.getBasePath()}`);
 });
+
+app.use(syntaxErrorHandler);
 
 app.use(errorLogger);
 
