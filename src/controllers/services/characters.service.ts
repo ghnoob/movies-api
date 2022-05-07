@@ -1,6 +1,8 @@
+import buildPaginator from 'pagination-apis';
 import { Service } from 'typedi';
 import CreateCharacterDto from '../../models/dto/characters/create-character.dto';
 import UpdateCharacterDto from '../../models/dto/characters/update-character.dto';
+import PaginateDto from '../../models/dto/paginate.dto';
 import Character from '../../models/character.model';
 
 /**
@@ -8,6 +10,25 @@ import Character from '../../models/character.model';
  */
 @Service()
 export default class CharactersService {
+  /**
+   * Returns paginated list of all characters.
+   */
+  async findAll(dto: PaginateDto) {
+    const { limit, skip, paginate } = buildPaginator({
+      page: dto.page,
+      limit: dto.limit,
+      url: '/characters',
+    });
+
+    const { count, rows } = await Character.findAndCountAll({
+      attributes: ['id', 'name'],
+      limit,
+      offset: skip,
+    });
+
+    return paginate(rows, count);
+  }
+
   /**
    * Creates a new character and saves it to the database.
    *
