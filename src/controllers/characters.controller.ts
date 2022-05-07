@@ -9,6 +9,23 @@ export default class CharactersController {
   constructor(private readonly service: CharactersService) {}
 
   /**
+   * Returns a paginated list of characters.
+   */
+  async findAll(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      return res
+        .status(HttpStatus.OK)
+        .json(await this.service.findAll(req.query));
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    * Creates a new character.
    */
   async create(
