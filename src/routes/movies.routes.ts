@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import MoviesController from '../controllers/movies.controller';
-import validateRequest from '../middlewares/validate-body.middleware';
+import validateRequest from '../middlewares/validate-request.middleware';
 import IdParamDto from '../models/dto/id-param.dto';
 import CommonRoutes from './common.routes';
 

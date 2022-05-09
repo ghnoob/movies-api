@@ -1,6 +1,6 @@
 import { Service } from 'typedi';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
-import validateRequest from '../middlewares/validate-body.middleware';
+import validateRequest from '../middlewares/validate-request.middleware';
 import CharactersController from '../controllers/characters.controller';
 import IdParamDto from '../models/dto/id-param.dto';
 import CreateCharacterDto from '../models/dto/characters/create-character.dto';
