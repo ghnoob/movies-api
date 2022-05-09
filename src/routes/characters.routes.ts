@@ -17,6 +17,12 @@ export default class CharactersRoutes extends CommonRoutes {
   protected setUpRoutes() {
     this.router.get('/', this.controller.findAll.bind(this.controller));
 
+    this.router.get(
+      '/:id',
+      validateRequest(IdParamDto, 'params'),
+      this.controller.findOne.bind(this.controller),
+    );
+
     this.router.post(
       '/',
       authenticateJwt,
