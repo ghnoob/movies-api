@@ -7,6 +7,7 @@ import { Container } from 'typedi';
 import AuthRoutes from './routes/auth.routes';
 import CharactersRoutes from './routes/characters.routes';
 import CommonRoutes from './routes/common.routes';
+import MoviesRoutes from './routes/movies.routes';
 import errorHandler from './middlewares/error-handler.middleware';
 import errorLogger from './middlewares/error-logger.middleware';
 import fallbackErrorTransformer from './middlewares/fallback-error-transformer.middleware';
@@ -25,7 +26,7 @@ app.use('/api', serve, setup(swaggerJSDoc(swaggerConfig)));
 
 app.use(requestLogger);
 
-Container.import([AuthRoutes, CharactersRoutes]);
+Container.import([AuthRoutes, CharactersRoutes, MoviesRoutes]);
 const routes: CommonRoutes[] = Container.getMany('routes');
 
 routes.forEach((route) => {
