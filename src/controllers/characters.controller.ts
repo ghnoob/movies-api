@@ -26,6 +26,27 @@ export default class CharactersController {
   }
 
   /**
+   * Returns the details of a character.
+   */
+  async findOne(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const character = await this.service.findOne(Number(req.params.id));
+
+      if (character) {
+        return res.status(HttpStatus.OK).json(character);
+      }
+
+      return next(new HttpError(HttpStatus.NOT_FOUND, 'Character not found.'));
+    } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
    * Creates a new character.
    */
   async create(
