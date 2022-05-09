@@ -1,3 +1,4 @@
+import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
 import HttpError from '../errors/http.error';
@@ -17,9 +18,11 @@ export default class CharactersController {
     next: NextFunction,
   ): Promise<Response | void> {
     try {
+      const result = await this.service.findAll(req.query);
+
       return res
         .status(HttpStatus.OK)
-        .json(await this.service.findAll(req.query));
+        .json(instanceToPlain(result, { excludeExtraneousValues: true }));
     } catch (err) {
       return next(err);
     }
@@ -37,7 +40,9 @@ export default class CharactersController {
       const character = await this.service.findOne(Number(req.params.id));
 
       if (character) {
-        return res.status(HttpStatus.OK).json(character);
+        return res
+          .status(HttpStatus.OK)
+          .json(instanceToPlain(character, { excludeExtraneousValues: true }));
       }
 
       return next(new HttpError(HttpStatus.NOT_FOUND, 'Character not found.'));
