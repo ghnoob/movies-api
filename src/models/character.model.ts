@@ -1,3 +1,4 @@
+import { Expose, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
   BelongsToMany,
@@ -7,6 +8,7 @@ import {
   AllowNull,
   Table,
 } from 'sequelize-typescript';
+import HideNull from '../decorators/hide-null.decorator';
 import MovieCharacter from './movie-character.model';
 import Movie from './movie.model';
 
@@ -26,10 +28,23 @@ import Movie from './movie.model';
 })
 export default class Character extends Model {
   /**
+   * Character's unique id.
+   * @example 1
+   */
+  @Expose()
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    autoIncrementIdentity: true,
+  })
+  id!: number;
+
+  /**
    * Character's name.
    *
    * @example 'Simba'
    */
+  @Expose()
   @AllowNull(false)
   @Column(DataType.STRING(30))
   name!: string;
@@ -39,18 +54,24 @@ export default class Character extends Model {
    *
    * @example 'https://upload.wikimedia.org/wikipedia/en/9/94/Simba_%28_Disney_character_-_adult%29.png'
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.STRING(2048))
   imageUrl!: string | null;
 
   /**
    * Character's age, in years.
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.INTEGER)
   age!: number | null;
 
   /**
    * Character's weight, in kilograms.
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.INTEGER)
   weight!: number | null;
 
@@ -58,12 +79,16 @@ export default class Character extends Model {
    * Character's backstory and/or a summary of the character's involvement in the
    * productions they took part of.
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.STRING(1000))
   history!: string | null;
 
   /**
    * List of movies that the character participated on.
    */
+  @Expose()
+  @Type(() => Movie)
   @BelongsToMany(() => Movie, () => MovieCharacter)
   movies!: Movie[];
 }
