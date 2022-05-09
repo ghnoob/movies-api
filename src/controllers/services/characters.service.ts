@@ -4,6 +4,7 @@ import CreateCharacterDto from '../../models/dto/characters/create-character.dto
 import UpdateCharacterDto from '../../models/dto/characters/update-character.dto';
 import PaginateDto from '../../models/dto/paginate.dto';
 import Character from '../../models/character.model';
+import Movie from '../../models/movie.model';
 
 /**
  * Helper methods for `CharactersController`.
@@ -21,12 +22,25 @@ export default class CharactersService {
     });
 
     const { count, rows } = await Character.findAndCountAll({
-      attributes: ['id', 'name'],
+      attributes: ['id', 'name', 'imageUrl'],
       limit,
       offset: skip,
     });
 
     return paginate(rows, count);
+  }
+
+  /**
+   * Retuns a character by its id.
+   */
+  findOne(id: number): Promise<Character | null> {
+    return Character.findByPk(id, {
+      include: {
+        model: Movie,
+        attributes: ['id', 'title', 'imageUrl'],
+        through: { attributes: [] },
+      },
+    });
   }
 
   /**
@@ -44,7 +58,7 @@ export default class CharactersService {
    * @returns The updated entity, or `null` if it was not found.
    */
   async update(id: number, dto: UpdateCharacterDto): Promise<Character | null> {
-    const character = await Character.findOne({ where: { id } });
+    const character = await Character.findByPk(id);
 
     if (character) {
       character.setAttributes(dto);
