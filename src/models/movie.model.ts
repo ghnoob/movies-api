@@ -1,3 +1,4 @@
+import { Expose, Exclude, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
   BelongsTo,
@@ -10,6 +11,7 @@ import {
   AllowNull,
   Table,
 } from 'sequelize-typescript';
+import HideNull from '../decorators/hide-null.decorator';
 import Character from './character.model';
 import Genre from './genre.model';
 import MovieCharacter from './movie-character.model';
@@ -30,10 +32,23 @@ import MovieCharacter from './movie-character.model';
 })
 export default class Movie extends Model {
   /**
+   * Movie's unique id.
+   * @example 1
+   */
+  @Expose()
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    autoIncrementIdentity: true,
+  })
+  id!: number;
+
+  /**
    * Title of the movie.
    *
    * @example 'The Lion King'
    */
+  @Expose()
   @AllowNull(false)
   @Column(DataType.STRING(100))
   title!: string;
@@ -43,6 +58,8 @@ export default class Movie extends Model {
    *
    * @example 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg'
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.STRING(2048))
   imageUrl!: string | null;
 
@@ -51,6 +68,7 @@ export default class Movie extends Model {
    *
    * @example 1
    */
+  @Exclude({ toPlainOnly: true })
   @ForeignKey(() => Genre)
   @AllowNull(false)
   @Column
@@ -59,6 +77,7 @@ export default class Movie extends Model {
   /**
    * Genre of the movie.
    */
+  @Expose()
   @BelongsTo(() => Genre)
   genre!: Genre;
 
@@ -70,6 +89,8 @@ export default class Movie extends Model {
    *
    * @example 4.7
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.DECIMAL(2, 1))
   rating!: number | null;
 
@@ -78,12 +99,15 @@ export default class Movie extends Model {
    *
    * @example '2022-04-23T02:17:57.207Z'
    */
+  @Expose()
   @CreatedAt
   createdAt!: Date;
 
   /**
    * List of characters of the movie.
    */
+  @Expose()
+  @Type(() => Character)
   @BelongsToMany(() => Character, () => MovieCharacter)
   characters!: Character[];
 }

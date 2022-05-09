@@ -1,3 +1,4 @@
+import { Expose, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
   Column,
@@ -7,6 +8,7 @@ import {
   AllowNull,
   Table,
 } from 'sequelize-typescript';
+import HideNull from '../decorators/hide-null.decorator';
 import Movie from './movie.model';
 
 /**
@@ -25,10 +27,23 @@ import Movie from './movie.model';
 })
 export default class Genre extends Model {
   /**
+   * Genre's unique id.
+   * @example 1
+   */
+  @Expose()
+  @Column({
+    primaryKey: true,
+    autoIncrement: true,
+    autoIncrementIdentity: true,
+  })
+  id!: number;
+
+  /**
    * Name of the genre.
    *
    * @example 'Drama'
    */
+  @Expose()
   @AllowNull(false)
   @Column(DataType.STRING(30))
   name!: string;
@@ -38,12 +53,16 @@ export default class Genre extends Model {
    *
    * @example 'https://upload.wikimedia.org/wikipedia/commons/1/10/Drama_Masks.svg'
    */
+  @Expose()
+  @HideNull()
   @Column(DataType.STRING(2048))
   imageUrl!: string | null;
 
   /**
    * List of movies that belong to the genre.
    */
+  @Expose()
+  @Type(() => Movie)
   @HasMany(() => Movie)
   movies!: Movie[];
 }
