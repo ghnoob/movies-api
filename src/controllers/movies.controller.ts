@@ -110,4 +110,22 @@ export default class MoviesController {
       return next(err);
     }
   }
+
+  async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const deleted = await this.service.delete(Number(req.params.id));
+
+      if (!deleted) {
+        return next(new HttpError(HttpStatus.NOT_FOUND, 'Movie not found.'));
+      }
+
+      return res.status(HttpStatus.OK).json({ message: 'Movie deleted.' });
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
