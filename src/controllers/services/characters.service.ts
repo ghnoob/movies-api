@@ -74,6 +74,6 @@ export default class CharactersService {
    * @returns The number of deleted characters (0 or 1).
    */
   delete(id: number): Promise<number> {
-    return Character.destroy({ where: { id } });
+    return Character.destroy({ where: { id }, limit: 1 });
   }
 }
