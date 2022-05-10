@@ -37,5 +37,12 @@ export default class MoviesRoutes extends CommonRoutes {
       validateRequest(UpdateMovieDto),
       this.controller.update.bind(this.controller),
     );
+
+    this.router.delete(
+      '/:id',
+      authenticateJwt,
+      validateRequest(IdParamDto, 'params'),
+      this.controller.delete.bind(this.controller),
+    );
   }
 }
