@@ -4,7 +4,7 @@ import '../auth/local.strategy';
 import AuthController from '../controllers/auth.controller';
 import LoginDto from '../models/dto/auth/login.dto';
 import RegisterDto from '../models/dto/auth/register.dto';
-import validateRequest from '../middlewares/validate-body.middleware';
+import validateRequest from '../middlewares/validate-request.middleware';
 import CommonRoutes from './common.routes';
 
 @Service({ id: 'routes', multiple: true })

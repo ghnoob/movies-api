@@ -1,4 +1,4 @@
-import { Expose, Exclude, Type } from 'class-transformer';
+import { Expose, Exclude, Transform, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
   BelongsTo,
@@ -90,6 +90,7 @@ export default class Movie extends Model {
    * @example 4.7
    */
   @Expose()
+  @Transform(({ value }) => (typeof value === 'string' ? Number(value) : value))
   @HideNull()
   @Column(DataType.DECIMAL(2, 1))
   rating!: number | null;
