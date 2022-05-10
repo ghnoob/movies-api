@@ -77,4 +77,37 @@ export default class MoviesController {
       return next(err);
     }
   }
+
+  /**
+   * Updates an existing movie.
+   */
+  async update(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const updated = await this.service.update(
+        Number(req.params.id),
+        req.body,
+      );
+
+      if (!updated) {
+        return next(new HttpError(HttpStatus.NOT_FOUND, 'Movie not found.'));
+      }
+
+      return res.status(HttpStatus.OK).json({ message: 'Movie updated.' });
+    } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return next(
+          new HttpError(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            `Genre with id ${req.body.genreId} does not exist.`,
+          ),
+        );
+      }
+
+      return next(err);
+    }
+  }
 }
