@@ -3,6 +3,7 @@ import MoviesController from '../controllers/movies.controller';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
 import validateRequest from '../middlewares/validate-request.middleware';
 import CreateMovieDto from '../models/dto/movies/create-movie.dto';
+import UpdateMovieDto from '../models/dto/movies/update-movie.dto';
 import IdParamDto from '../models/dto/id-param.dto';
 import CommonRoutes from './common.routes';
 
@@ -27,6 +28,14 @@ export default class MoviesRoutes extends CommonRoutes {
       authenticateJwt,
       validateRequest(CreateMovieDto),
       this.controller.create.bind(this.controller),
+    );
+
+    this.router.patch(
+      '/:id',
+      authenticateJwt,
+      validateRequest(IdParamDto, 'params'),
+      validateRequest(UpdateMovieDto),
+      this.controller.update.bind(this.controller),
     );
   }
 }
