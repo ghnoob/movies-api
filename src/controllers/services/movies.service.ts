@@ -3,6 +3,7 @@ import { Service } from 'typedi';
 import Character from '../../models/character.model';
 import Genre from '../../models/genre.model';
 import Movie from '../../models/movie.model';
+import CreateMovieDto from '../../models/dto/movies/create-movie.dto';
 import PaginateDto from '../../models/dto/paginate.dto';
 
 @Service()
@@ -42,5 +43,14 @@ export default class MoviesService {
         },
       ],
     });
+  }
+
+  /**
+   * Creates a new movie and saves it to the database.
+   *
+   * @returns The id of the created movie.
+   */
+  create(dto: CreateMovieDto): Promise<Movie> {
+    return Movie.create({ ...dto }, { returning: ['id'] });
   }
 }
