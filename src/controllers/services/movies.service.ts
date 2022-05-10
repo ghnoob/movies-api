@@ -1,8 +1,11 @@
 import buildPaginator from 'pagination-apis';
+import { WhereOptions } from 'sequelize';
 import { Service } from 'typedi';
 import Character from '../../models/character.model';
 import Genre from '../../models/genre.model';
 import Movie from '../../models/movie.model';
+import MovieCharacter from '../../models/movie-character.model';
+import AddMovieCharacterDto from '../../models/dto/movies/add-movie-character.dto';
 import CreateMovieDto from '../../models/dto/movies/create-movie.dto';
 import UpdateMovieDto from '../../models/dto/movies/update-movie.dto';
 import PaginateDto from '../../models/dto/paginate.dto';
@@ -78,5 +81,28 @@ export default class MoviesService {
    */
   delete(id: number): Promise<number> {
     return Movie.destroy({ where: { id }, limit: 1 });
+  }
+
+  /**
+   * Creates a new relation between a movie and a character and saves it to the db.
+   *
+   * @returns The created entity
+   */
+  addCharacter(
+    id: number,
+    { characterId }: AddMovieCharacterDto,
+  ): Promise<MovieCharacter> {
+    return MovieCharacter.create({ movieId: id, characterId });
+  }
+
+  /**
+   * Returns a boolean indicating if a movie exists.
+   *
+   * @param where Conditions to find a movie. If not specified, returns true if at least one movie exists in the db.
+   * @example
+   * const exists = await new MoviesService().exists({ id: 1 });
+   */
+  async exists(where?: WhereOptions<Movie>): Promise<boolean> {
+    return Boolean(await Movie.findOne({ attributes: ['id'], where }));
   }
 }
