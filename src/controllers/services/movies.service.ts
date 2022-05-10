@@ -96,6 +96,18 @@ export default class MoviesService {
   }
 
   /**
+   * Removes a character from a movie.
+   *
+   * @returns The number of removed characters (0 or 1).
+   */
+  removeCharacter(movieId: number, characterId: number): Promise<number> {
+    return MovieCharacter.destroy({
+      where: { movieId, characterId },
+      limit: 1,
+    });
+  }
+
+  /**
    * Returns a boolean indicating if a movie exists.
    *
    * @param where Conditions to find a movie. If not specified, returns true if at least one movie exists in the db.
