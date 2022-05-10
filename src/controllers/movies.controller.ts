@@ -171,4 +171,38 @@ export default class MoviesController {
       return next(err);
     }
   }
+
+  /**
+   * Removes a character from a movie.
+   */
+  async removeCharacter(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const deleted = await this.service.removeCharacter(
+        Number(req.params.movieId),
+        Number(req.params.characterId),
+      );
+
+      if (!deleted) {
+        const entity = (await this.service.exists({
+          id: Number(req.params.movieId),
+        }))
+          ? 'Character'
+          : 'Movie';
+
+        return next(
+          new HttpError(HttpStatus.NOT_FOUND, `${entity} not found.`),
+        );
+      }
+
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Character removed from movie.' });
+    } catch (err) {
+      return next(err);
+    }
+  }
 }
