@@ -1,6 +1,6 @@
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
-import { ForeignKeyConstraintError } from 'sequelize';
+import { ForeignKeyConstraintError, UniqueConstraintError } from 'sequelize';
 import { Service } from 'typedi';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
@@ -111,6 +111,9 @@ export default class MoviesController {
     }
   }
 
+  /**
+   * Deletes a movie.
+   */
   async delete(
     req: Request,
     res: Response,
@@ -125,6 +128,46 @@ export default class MoviesController {
 
       return res.status(HttpStatus.OK).json({ message: 'Movie deleted.' });
     } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * Adds a character to a movie
+   */
+  async addCharacter(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      if (!(await this.service.exists({ id: Number(req.params.id) }))) {
+        return next(new HttpError(HttpStatus.NOT_FOUND, 'Movie not found.'));
+      }
+
+      await this.service.addCharacter(Number(req.params.id), req.body);
+      return res
+        .status(HttpStatus.OK)
+        .json({ message: 'Character added to movie' });
+    } catch (err) {
+      if (err instanceof UniqueConstraintError) {
+        return next(
+          new HttpError(
+            HttpStatus.CONFLICT,
+            'The character is already added to the movie.',
+          ),
+        );
+      }
+
+      if (err instanceof ForeignKeyConstraintError) {
+        return next(
+          new HttpError(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            `Character with id ${req.body.characterId} does not exist.`,
+          ),
+        );
+      }
+
       return next(err);
     }
   }
