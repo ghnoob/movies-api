@@ -70,4 +70,13 @@ export default class MoviesService {
 
     return movie;
   }
+
+  /**
+   * Deletes a movie.
+   *
+   * @returns The number of deleted movies (0 or 1).
+   */
+  delete(id: number): Promise<number> {
+    return Movie.destroy({ where: { id }, limit: 1 });
+  }
 }
