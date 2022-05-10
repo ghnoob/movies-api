@@ -2,6 +2,7 @@ import { Service } from 'typedi';
 import MoviesController from '../controllers/movies.controller';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
 import validateRequest from '../middlewares/validate-request.middleware';
+import AddMovieCharacterDto from '../models/dto/movies/add-movie-character.dto';
 import CreateMovieDto from '../models/dto/movies/create-movie.dto';
 import UpdateMovieDto from '../models/dto/movies/update-movie.dto';
 import IdParamDto from '../models/dto/id-param.dto';
@@ -43,6 +44,14 @@ export default class MoviesRoutes extends CommonRoutes {
       authenticateJwt,
       validateRequest(IdParamDto, 'params'),
       this.controller.delete.bind(this.controller),
+    );
+
+    this.router.post(
+      '/:id/characters',
+      authenticateJwt,
+      validateRequest(IdParamDto, 'params'),
+      validateRequest(AddMovieCharacterDto),
+      this.controller.addCharacter.bind(this.controller),
     );
   }
 }
