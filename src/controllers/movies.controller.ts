@@ -1,5 +1,6 @@
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
+import { ForeignKeyConstraintError } from 'sequelize';
 import { Service } from 'typedi';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
@@ -47,6 +48,32 @@ export default class MoviesController {
 
       return next(new HttpError(HttpStatus.NOT_FOUND, 'Movie not found.'));
     } catch (err) {
+      return next(err);
+    }
+  }
+
+  /**
+   * Creates a new movie.
+   */
+  async create(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<Response | void> {
+    try {
+      const movie = await this.service.create(req.body);
+
+      return res.status(HttpStatus.CREATED).json({ id: movie.id });
+    } catch (err) {
+      if (err instanceof ForeignKeyConstraintError) {
+        return next(
+          new HttpError(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            `Genre with id ${req.body.genreId} does not exist.`,
+          ),
+        );
+      }
+
       return next(err);
     }
   }
