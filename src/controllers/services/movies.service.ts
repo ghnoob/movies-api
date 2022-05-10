@@ -4,6 +4,7 @@ import Character from '../../models/character.model';
 import Genre from '../../models/genre.model';
 import Movie from '../../models/movie.model';
 import CreateMovieDto from '../../models/dto/movies/create-movie.dto';
+import UpdateMovieDto from '../../models/dto/movies/update-movie.dto';
 import PaginateDto from '../../models/dto/paginate.dto';
 
 @Service()
@@ -52,5 +53,21 @@ export default class MoviesService {
    */
   create(dto: CreateMovieDto): Promise<Movie> {
     return Movie.create({ ...dto });
+  }
+
+  /**
+   * Updates a movie.
+   *
+   * @returns The updated entity, or `null` if it was not found.
+   */
+  async update(id: number, dto: UpdateMovieDto): Promise<Movie | null> {
+    const movie = await Movie.findByPk(id);
+
+    if (movie) {
+      movie.setAttributes(dto);
+      await movie.save();
+    }
+
+    return movie;
   }
 }
