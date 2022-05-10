@@ -51,6 +51,6 @@ export default class MoviesService {
    * @returns The id of the created movie.
    */
   create(dto: CreateMovieDto): Promise<Movie> {
-    return Movie.create({ ...dto }, { returning: ['id'] });
+    return Movie.create({ ...dto });
   }
 }
