@@ -1,15 +1,18 @@
 import { Expose } from 'class-transformer';
 import { IsInt, IsString, IsOptional, IsUrl, MaxLength } from 'class-validator';
+import Trim from '../../../decorators/trim.decorator';
 
 export default class CreateCharacterDto {
   @Expose()
   @MaxLength(30)
+  @Trim()
   @IsString()
   name!: string;
 
   @Expose()
   @IsUrl()
   @MaxLength(2048)
+  @Trim()
   @IsString()
   @IsOptional()
   imageUrl?: string;
@@ -26,6 +29,7 @@ export default class CreateCharacterDto {
 
   @Expose()
   @MaxLength(1000)
+  @Trim()
   @IsString()
   @IsOptional()
   history?: string;
