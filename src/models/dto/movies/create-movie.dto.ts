@@ -9,6 +9,7 @@ import {
   MaxLength,
   Min,
 } from 'class-validator';
+import Trim from '../../../decorators/trim.decorator';
 
 export default class CreateMovieDto {
   /**
@@ -17,6 +18,7 @@ export default class CreateMovieDto {
    * @example 'The Lion King'
    */
   @Expose()
+  @Trim()
   @IsString()
   @MaxLength(100)
   title!: string;
@@ -29,6 +31,7 @@ export default class CreateMovieDto {
   @Expose()
   @MaxLength(2048)
   @IsUrl()
+  @Trim()
   @IsString()
   @IsOptional()
   imageUrl?: string;

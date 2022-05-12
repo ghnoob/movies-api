@@ -16,11 +16,13 @@ export default class FilterCharacterDto extends PaginateDto {
   @Expose()
   @IsOptional()
   @ToNumericFilter()
+  @Trim()
   age?: NumericFilter;
 
   @Expose()
   @IsOptional()
   @ToNumericFilter()
+  @Trim()
   weight?: NumericFilter;
 
   @Expose()
@@ -37,5 +39,6 @@ export default class FilterCharacterDto extends PaginateDto {
       return !Number.isNaN(asNumber) ? asNumber : null;
     });
   })
+  @Trim()
   movies?: Array<number | null>;
 }
