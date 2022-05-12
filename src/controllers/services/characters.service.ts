@@ -1,10 +1,12 @@
 import buildPaginator from 'pagination-apis';
+import { col, fn, literal, Op, where } from 'sequelize';
 import { Service } from 'typedi';
 import CreateCharacterDto from '../../models/dto/characters/create-character.dto';
+import FilterCharacterDto from '../../models/dto/characters/filter-character.dto';
 import UpdateCharacterDto from '../../models/dto/characters/update-character.dto';
-import PaginateDto from '../../models/dto/paginate.dto';
 import Character from '../../models/character.model';
 import Movie from '../../models/movie.model';
+import NumericFilter from '../../models/types/numeric-filter.type';
 
 /**
  * Helper methods for `CharactersController`.
@@ -14,7 +16,39 @@ export default class CharactersService {
   /**
    * Returns paginated list of all characters.
    */
-  async findAll(dto: PaginateDto) {
+  async findAll(dto: FilterCharacterDto) {
+    const conditions = [];
+
+    if (dto.name != undefined) {
+      conditions.push(
+        where(fn('to_tsvector', col('name')), {
+          [Op.match]: fn('plainto_tsquery', dto.name),
+        }),
+      );
+    }
+
+    (['age', 'weight'] as const).forEach((prop) => {
+      const filter = dto[prop];
+      if (filter) {
+        const constraints = Object.entries(filter).map(([key, value]) => ({
+          [Op[key as keyof NumericFilter]]: value,
+        }));
+
+        conditions.push({
+          [prop]: { [Op.and]: constraints },
+        });
+      }
+    });
+
+    if (dto.movies && dto.movies.length > 0) {
+      const subQuery = `(
+        SELECT "characterId" FROM "movies-characters"
+        WHERE "movieId" IN ( ${dto.movies.join(',')} )
+      )`;
+
+      conditions.push({ id: { [Op.in]: literal(subQuery) } });
+    }
+
     const { limit, skip, paginate } = buildPaginator({
       page: dto.page,
       limit: dto.limit,
@@ -23,6 +57,7 @@ export default class CharactersService {
 
     const { count, rows } = await Character.findAndCountAll({
       attributes: ['id', 'name', 'imageUrl'],
+      where: { [Op.and]: conditions },
       limit,
       offset: skip,
     });

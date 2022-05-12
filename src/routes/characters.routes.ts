@@ -4,6 +4,7 @@ import validateRequest from '../middlewares/validate-request.middleware';
 import CharactersController from '../controllers/characters.controller';
 import IdParamDto from '../models/dto/id-param.dto';
 import CreateCharacterDto from '../models/dto/characters/create-character.dto';
+import FilterCharacterDto from '../models/dto/characters/filter-character.dto';
 import UpdateCharacterDto from '../models/dto/characters/update-character.dto';
 import CommonRoutes from './common.routes';
 
@@ -15,7 +16,11 @@ export default class CharactersRoutes extends CommonRoutes {
   }
 
   protected setUpRoutes() {
-    this.router.get('/', this.controller.findAll.bind(this.controller));
+    this.router.get(
+      '/',
+      validateRequest(FilterCharacterDto, 'query'),
+      this.controller.findAll.bind(this.controller),
+    );
 
     this.router.get(
       '/:id',
