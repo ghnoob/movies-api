@@ -18,7 +18,13 @@ async function bootstrap() {
     if (appConfig.ENVIRONMENT !== 'production') {
       await db.sync({ force: true });
 
-      spawn('npx sequelize db:seed:all', { shell: true });
+      let command = 'npx sequelize db:seed:all';
+
+      if (appConfig.ENVIRONMENT === 'debug') {
+        command += ' --debug';
+      }
+
+      spawn(command, { shell: true });
     }
 
     logger.info('Database connected.');
