@@ -30,6 +30,23 @@
  *           example: '2022-04-23T02:17:57.207Z'
  *       required:
  *         - title
+ *
+ *     MovieDetails:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Movie'
+ *         - type: object
+ *           required:
+ *             - genre
+ *           properties:
+ *             genre:
+ *               $ref: '#/components/schemas/Genre'
+ *             rating:
+ *               type: number
+ *               nullable: true
+ *               minimum: 1
+ *               maximum: 5
+ *               description: Movie rating. Max 1 decimal place.
+ *               example: 4.3
  */
 
 import { Expose, Exclude, Transform, Type } from 'class-transformer';
