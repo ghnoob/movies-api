@@ -1,3 +1,30 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Character:
+ *       properties:
+ *         id:
+ *           type: integer
+ *           readOnly: true
+ *           description: Character unique ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           maxLength: 30
+ *           description: Character name.
+ *           example: Simba
+ *         imageUrl:
+ *           type: string
+ *           nullable: true
+ *           format: url
+ *           maxLength: 2048
+ *           description: Character image url.
+ *           example: 'https://upload.wikimedia.org/wikipedia/en/9/94/Simba_%28_Disney_character_-_adult%29.png'
+ *       required:
+ *         - name
+ */
+
 import { Expose, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
