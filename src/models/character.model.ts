@@ -1,3 +1,51 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Character:
+ *       properties:
+ *         id:
+ *           type: integer
+ *           readOnly: true
+ *           description: Character unique ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           maxLength: 30
+ *           description: Character name.
+ *           example: Simba
+ *         imageUrl:
+ *           type: string
+ *           nullable: true
+ *           format: url
+ *           maxLength: 2048
+ *           description: Character image url.
+ *           example: 'https://upload.wikimedia.org/wikipedia/en/9/94/Simba_%28_Disney_character_-_adult%29.png'
+ *       required:
+ *         - name
+ *
+ *     CharacterDetails:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Character'
+ *         - $ref: '#/components/schemas/CreateCharacterDto'
+ *         - type: object
+ *           properties:
+ *             imageUrl:
+ *               nullable: true
+ *             age:
+ *               nullable: true
+ *             weight:
+ *               nullable: true
+ *             history:
+ *               nullable: true
+ *             movies:
+ *               type: array
+ *               readOnly: true
+ *               description: List of movies or series where the character was part of.
+ *               items:
+ *                 $ref: '#/components/schemas/Movie'
+ */
+
 import { Expose, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {

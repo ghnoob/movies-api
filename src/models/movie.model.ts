@@ -1,3 +1,54 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Movie:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           readOnly: true
+ *           description: Movie unique ID.
+ *           example: 1
+ *         title:
+ *           type: string
+ *           maxLength: 100
+ *           description: Movie title.
+ *           example: 'The Lion King'
+ *         imageUrl:
+ *           type: string
+ *           nullable: true
+ *           format: url
+ *           maxLength: 2048
+ *           description: Movie poster URL.
+ *           example: 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg'
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           readOnly: true
+ *           description: Movie creation date.
+ *           example: '2022-04-23T02:17:57.207Z'
+ *       required:
+ *         - title
+ *
+ *     MovieDetails:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Movie'
+ *         - type: object
+ *           required:
+ *             - genre
+ *           properties:
+ *             genre:
+ *               $ref: '#/components/schemas/Genre'
+ *             rating:
+ *               type: number
+ *               nullable: true
+ *               minimum: 1
+ *               maximum: 5
+ *               description: Movie rating. Max 1 decimal place.
+ *               example: 4.3
+ */
+
 import { Expose, Exclude, Transform, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
