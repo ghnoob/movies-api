@@ -1,5 +1,5 @@
 import buildPaginator from 'pagination-apis';
-import { WhereOptions } from 'sequelize';
+import { col, fn, Op, where, WhereOptions } from 'sequelize';
 import { Service } from 'typedi';
 import Character from '../../models/character.model';
 import Genre from '../../models/genre.model';
@@ -8,14 +8,28 @@ import MovieCharacter from '../../models/movie-character.model';
 import AddMovieCharacterDto from '../../models/dto/movies/add-movie-character.dto';
 import CreateMovieDto from '../../models/dto/movies/create-movie.dto';
 import UpdateMovieDto from '../../models/dto/movies/update-movie.dto';
-import PaginateDto from '../../models/dto/paginate.dto';
+import FilterMovieDto from '../../models/dto/movies/filter-movie.dto';
 
 @Service()
 export default class MoviesService {
   /**
    * Returns paginated list of all movies.
    */
-  async findAll(dto: PaginateDto) {
+  async findAll(dto: FilterMovieDto) {
+    const conditions = [];
+
+    if (dto.title !== undefined) {
+      conditions.push(
+        where(fn('to_tsvector', col('title')), {
+          [Op.match]: fn('plainto_tsquery', dto.title),
+        }),
+      );
+    }
+
+    if (dto.genre !== undefined) {
+      conditions.push({ genreId: dto.genre });
+    }
+
     const { limit, skip, paginate } = buildPaginator({
       page: dto.page,
       limit: dto.limit,
@@ -24,6 +38,8 @@ export default class MoviesService {
 
     const { count, rows } = await Movie.findAndCountAll({
       attributes: ['id', 'title', 'imageUrl', 'createdAt'],
+      where: { [Op.and]: conditions },
+      order: [['createdAt', dto.order]],
       limit,
       offset: skip,
     });

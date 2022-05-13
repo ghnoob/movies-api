@@ -2,6 +2,7 @@ import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { ForeignKeyConstraintError, UniqueConstraintError } from 'sequelize';
 import { Service } from 'typedi';
+import FilterMovieDto from '../models/dto/movies/filter-movie.dto';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
 import MoviesService from './services/movies.service';
@@ -19,7 +20,9 @@ export default class MoviesController {
     next: NextFunction,
   ): Promise<Response | void> {
     try {
-      const result = await this.service.findAll(req.query);
+      const result = await this.service.findAll(
+        req.query as unknown as FilterMovieDto,
+      );
 
       return res
         .status(HttpStatus.OK)
