@@ -23,6 +23,27 @@
  *           example: 'https://upload.wikimedia.org/wikipedia/en/9/94/Simba_%28_Disney_character_-_adult%29.png'
  *       required:
  *         - name
+ *
+ *     CharacterDetails:
+ *       allOf:
+ *         - $ref: '#/components/schemas/Character'
+ *         - $ref: '#/components/schemas/CreateCharacterDto'
+ *         - type: object
+ *           properties:
+ *             imageUrl:
+ *               nullable: true
+ *             age:
+ *               nullable: true
+ *             weight:
+ *               nullable: true
+ *             history:
+ *               nullable: true
+ *             movies:
+ *               type: array
+ *               readOnly: true
+ *               description: List of movies or series where the character was part of.
+ *               items:
+ *                 $ref: '#/components/schemas/Movie'
  */
 
 import { Expose, Type } from 'class-transformer';
