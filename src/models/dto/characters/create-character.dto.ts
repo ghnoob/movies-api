@@ -1,3 +1,15 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateCharacterDto:
+ *       allOf:
+ *         - $ref: '#/components/schemas/UpdateCharacterDto'
+ *         - type: object
+ *           required:
+ *             - name
+ */
+
 import { Expose } from 'class-transformer';
 import { IsInt, IsString, IsOptional, IsUrl, MaxLength } from 'class-validator';
 import Trim from '../../../decorators/trim.decorator';
