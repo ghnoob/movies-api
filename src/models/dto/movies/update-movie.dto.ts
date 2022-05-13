@@ -1,3 +1,34 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UpdateMovieDto:
+ *       type: object
+ *       properties:
+ *         title:
+ *           type: string
+ *           maxLength: 100
+ *           description: Movie title.
+ *           example: The Lion King
+ *         imageUrl:
+ *           type: string
+ *           format: url
+ *           maxLength: 2048
+ *           description: Movie poster URL.
+ *           example: 'https://upload.wikimedia.org/wikipedia/en/3/3d/The_Lion_King_poster.jpg'
+ *         genreId:
+ *           type: integer
+ *           description: Movie genre ID.
+ *           writeOnly: true
+ *           example: 10
+ *         rating:
+ *           type: number
+ *           minimum: 1
+ *           maximum: 5
+ *           description: Movie rating. Max 1 decimal place.
+ *           example: 4.3
+ */
+
 import { Expose } from 'class-transformer';
 import {
   IsInt,
