@@ -1,3 +1,18 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       allOf:
+ *         - $ref: '#/components/schemas/LoginDto'
+ *         - type: object
+ *           properties:
+ *             id:
+ *               type: integer
+ *               readOnly: true
+ *               description: User unique ID.
+ */
+
 import { compare, hash } from 'bcrypt';
 import { col, fn } from 'sequelize';
 import {
