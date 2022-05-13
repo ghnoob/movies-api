@@ -1,3 +1,15 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreateMovieDto:
+ *       allOf:
+ *         - $ref: '#/components/schemas/UpdateMovieDto'
+ *         - type: object
+ *           required:
+ *             - title
+ */
+
 import { Expose } from 'class-transformer';
 import {
   IsInt,
