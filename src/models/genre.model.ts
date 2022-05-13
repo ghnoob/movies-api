@@ -1,3 +1,31 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Genre:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *           readOnly: true
+ *           description: Genre unique ID.
+ *           example: 1
+ *         name:
+ *           type: string
+ *           maxLength: 30
+ *           description: Genre name
+ *           example: Action
+ *         imageUrl:
+ *           type: string
+ *           nullable: true
+ *           format: url
+ *           maxLength: 2048
+ *           description: URL of an image representing the genre
+ *           example: 'https://upload.wikimedia.org/wikipedia/commons/1/10/Drama_Masks.svg'
+ *       required:
+ *         - name
+ */
+
 import { Expose, Type } from 'class-transformer';
 import { col, fn } from 'sequelize';
 import {
