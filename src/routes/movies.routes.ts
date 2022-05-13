@@ -6,6 +6,7 @@ import AddMovieCharacterDto from '../models/dto/movies/add-movie-character.dto';
 import RemoveMovieCharacterDto from '../models/dto/movies/remove-movie-character.dto';
 import CreateMovieDto from '../models/dto/movies/create-movie.dto';
 import UpdateMovieDto from '../models/dto/movies/update-movie.dto';
+import FilterMovieDto from '../models/dto/movies/filter-movie.dto';
 import IdParamDto from '../models/dto/id-param.dto';
 import CommonRoutes from './common.routes';
 
@@ -17,7 +18,11 @@ export default class MoviesRoutes extends CommonRoutes {
   }
 
   protected setUpRoutes() {
-    this.router.get('/', this.controller.findAll.bind(this.controller));
+    this.router.get(
+      '/',
+      validateRequest(FilterMovieDto, 'query'),
+      this.controller.findAll.bind(this.controller),
+    );
 
     this.router.get(
       '/:id',
