@@ -1,3 +1,20 @@
+/**
+ * @swagger
+ * components:
+ *   responses:
+ *     ValidationError:
+ *       description: Validation error.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 400
+ *             name: Bad Request
+ *             errors:
+ *               - example validation error
+ */
+
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { Request, Response, NextFunction } from 'express';
