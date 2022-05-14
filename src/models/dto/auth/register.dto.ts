@@ -12,6 +12,7 @@
  *               format: password
  *               writeOnly: true
  *               description: Password confirmation. Must be equal to password.
+ *               example: ABCdef123!
  *           required:
  *             - passwordConfirmation
  */

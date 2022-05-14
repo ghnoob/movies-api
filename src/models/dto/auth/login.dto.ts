@@ -9,11 +9,13 @@
  *           type: string
  *           format: email
  *           description: User email.
+ *           example: user@example.com
  *         password:
  *           type: string
  *           format: password
  *           writeOnly: true
  *           description: User password.
+ *           example: ABCdef123!
  *       required:
  *         - email
  *         - password
