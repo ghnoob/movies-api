@@ -1,3 +1,29 @@
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     HttpError:
+ *       type: object
+ *       required:
+ *         - statusCode
+ *         - name
+ *       properties:
+ *         statusCode:
+ *           type: integer
+ *           default: 500
+ *           description: Error status code
+ *         name:
+ *           type: string
+ *           default: Internal Server Error
+ *           description: Short generic description of the error
+ *         message:
+ *           oneOf:
+ *             - type: string
+ *             - type: object
+ *           default: Unknown error. Contact the system administrators.
+ *           description: More detailed description of the error
+ */
+
 import { STATUS_CODES } from 'http';
 import HttpStatus from '../models/enums/http-status.enum';
 
