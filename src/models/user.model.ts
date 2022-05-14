@@ -11,6 +11,7 @@
  *               type: integer
  *               readOnly: true
  *               description: User unique ID.
+ *               example: 1
  */
 
 import { compare, hash } from 'bcrypt';

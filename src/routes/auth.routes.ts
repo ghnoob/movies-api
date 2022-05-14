@@ -1,3 +1,60 @@
+/**
+ * @swagger
+ * paths:
+ *   /auth/register:
+ *     post:
+ *       tags:
+ *         - auth
+ *       summary: Creates a new account
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterDto'
+ *       responses:
+ *         201:
+ *           $ref: '#/components/responses/UserRegistered'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         409:
+ *           $ref: '#/components/responses/UserAlreadyExists'
+ *
+ *   /auth/login:
+ *     post:
+ *       tags:
+ *         - auth
+ *       summary: Logs in to an already created account
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/LoginDto'
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/UserLoggedIn'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/InvalidLoginCredentials'
+ *         404:
+ *           $ref: '#/components/responses/UserNotFound'
+ *
+ * components:
+ *   responses:
+ *     InvalidLoginCredentials:
+ *       description: Invalid login credentials.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 401
+ *             name: Unauthorized
+ *             message: Invalid email or password.
+ */
+
 import passport from 'passport';
 import { Service } from 'typedi';
 import '../auth/local.strategy';
