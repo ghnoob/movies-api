@@ -15,6 +15,13 @@
  *                     items:
  *                       $ref: '#/components/schemas/Character'
  *
+ *     CharacterDetails:
+ *       description: The found character
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CharacterDetails'
+ *
  *     CharacterCreated:
  *       description: Character created successfully.
  *       content:
