@@ -34,6 +34,17 @@
  *                 readOnly: true
  *                 description: Id of the created character.
  *                 example: 1
+ *
+ *     CharacterNotFound:
+ *       description: Character not found.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 404
+ *             name: Not Found
+ *             message: Character not found.
  */
 
 import { instanceToPlain } from 'class-transformer';
