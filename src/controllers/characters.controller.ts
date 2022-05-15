@@ -1,3 +1,21 @@
+/**
+ * @swagger
+ * components:
+ *   responses:
+ *     CharacterList:
+ *       description: Paginated list of characters
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: '#/components/schemas/PaginationResult'
+ *               - type: object
+ *                 properties:
+ *                   data:
+ *                     items:
+ *                       $ref: '#/components/schemas/Character'
+ */
+
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';
