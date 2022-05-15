@@ -63,6 +63,26 @@
  *           $ref: '#/components/responses/ValidationError'
  *         401:
  *           $ref: '#/components/responses/Unauthorized'
+ *
+ *   /characters/{id}:
+ *     get:
+ *       tags:
+ *         - characters
+ *       summary: Get a character details by its id
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Character id
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/CharacterDetails'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         404:
+ *           $ref: '#/components/responses/CharacterNotFound'
  */
 
 import { Service } from 'typedi';
