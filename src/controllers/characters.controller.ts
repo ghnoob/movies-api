@@ -14,6 +14,19 @@
  *                   data:
  *                     items:
  *                       $ref: '#/components/schemas/Character'
+ *
+ *     CharacterCreated:
+ *       description: Character created successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 readOnly: true
+ *                 description: Id of the created character.
+ *                 example: 1
  */
 
 import { instanceToPlain } from 'class-transformer';
