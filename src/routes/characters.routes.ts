@@ -43,6 +43,26 @@
  *       responses:
  *         200:
  *           $ref: '#/components/responses/CharacterList'
+ *
+ *     post:
+ *       tags:
+ *         - characters
+ *       summary: Creates a new character
+ *       security:
+ *         - bearerAuth: []
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CreateCharacterDto'
+ *       responses:
+ *         201:
+ *           $ref: '#/components/responses/CharacterCreated'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
  */
 
 import { Service } from 'typedi';
