@@ -111,6 +111,29 @@
  *           $ref: '#/components/responses/Unauthorized'
  *         404:
  *           $ref: '#/components/responses/CharacterNotFound'
+ *
+ *     delete:
+ *       tags:
+ *         - characters
+ *       summary: Delete a character
+ *       security:
+ *         - bearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Character id
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/CharacterUpdated'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         404:
+ *           $ref: '#/components/responses/CharacterNotFound'
  */
 
 import { Service } from 'typedi';
