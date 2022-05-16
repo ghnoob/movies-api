@@ -46,6 +46,17 @@
  *                 type: string
  *                 default: Character updated.
  *
+ *     CharacterDeleted:
+ *       description: Character deleted successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character deleted.
+ *
  *     CharacterNotFound:
  *       description: Character not found.
  *       content:
