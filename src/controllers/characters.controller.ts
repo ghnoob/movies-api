@@ -35,6 +35,17 @@
  *                 description: Id of the created character.
  *                 example: 1
  *
+ *     CharacterUpdated:
+ *       description: Character updated successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character updated.
+ *
  *     CharacterNotFound:
  *       description: Character not found.
  *       content:
