@@ -19,7 +19,9 @@ export default function ToNumericFilter(options?: TransformOptions) {
     if (Array.isArray(value) && value.length > 0) {
       const [item] = value;
 
-      return { eq: isNumeric(item) ? Number(item) : null };
+      return {
+        eq: typeof item === 'string' && isNumeric(item) ? Number(item) : null,
+      };
     }
 
     const result: NumericFilter = {};
@@ -35,7 +37,8 @@ export default function ToNumericFilter(options?: TransformOptions) {
           val = val[0];
         }
 
-        result[key] = isNumeric(val) ? Number(val) : null;
+        result[key] =
+          typeof val === 'string' && isNumeric(val) ? Number(val) : null;
       }
     });
 
