@@ -1,6 +1,41 @@
 /**
  * @swagger
  * components:
+ *   links:
+ *     GetAllCharacters:
+ *       operationId: getAllCharacters
+ *       parameters:
+ *         name: '$response.body#/name'
+ *         age: '$response.body#/age'
+ *         weight: '$response.body#/weight'
+ *       description: >
+ *         The `name`, `age` and `weight` values returned in the response can be used
+ *         as the query parameters of the same name in `GET /characters`
+ *
+ *     GetCharacterDetails:
+ *       operationId: getCharacterDetails
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `GET /characters/{id}`
+ *
+ *     UpdateCharacter:
+ *       operationId: updateCharacter
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `PATCH /characters/{id}`
+ *
+ *     DeleteCharacter:
+ *       operationId: deleteCharacter
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `DELETE /characters/{id}`
+ *
  *   responses:
  *     CharacterList:
  *       description: Paginated list of characters
@@ -21,6 +56,9 @@
  *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/CharacterDetails'
+ *       links:
+ *         getAllCharacters:
+ *           $ref: '#/components/links/GetAllCharacters'
  *
  *     CharacterCreated:
  *       description: Character created successfully.
@@ -34,6 +72,13 @@
  *                 readOnly: true
  *                 description: Id of the created character.
  *                 example: 1
+ *       links:
+ *         getCharacterDetails:
+ *           $ref: '#/components/links/GetCharacterDetails'
+ *         updateCharacter:
+ *           $ref: '#/components/links/UpdateCharacter'
+ *         deleteCharacter:
+ *           $ref: '#/components/links/DeleteCharacter'
  *
  *     CharacterUpdated:
  *       description: Character updated successfully.
