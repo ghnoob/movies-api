@@ -1,3 +1,52 @@
+/**
+ * @swagger
+ * paths:
+ *   /movies:
+ *     get:
+ *       tags:
+ *         - movies
+ *       operationId: getAllMovies
+ *       summary: Get all movies
+ *       parameters:
+ *         - in: query
+ *           name: page
+ *           schema:
+ *             type: integer
+ *             minimum: 1
+ *             default: 1
+ *             description: Page number of the paginated result
+ *         - in: query
+ *           name: limit
+ *           schema:
+ *             type: integer
+ *             minimum: 1
+ *             maximum: 50
+ *             default: 50
+ *             description: Maximum number of items per page
+ *         - in: query
+ *           name: title
+ *           schema:
+ *             type: string
+ *           description: Filter by title
+ *         - in: query
+ *           name: genre
+ *           schema:
+ *             type: integer
+ *           description: Filter by genre id
+ *         - in: query
+ *           name: order
+ *           schema:
+ *             type: string
+ *             enum:
+ *               - ASC
+ *               - DESC
+ *             description: Sort by creation date, ascending or descending
+ *             default: ASC
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/MovieList'
+ */
+
 import { Service } from 'typedi';
 import MoviesController from '../controllers/movies.controller';
 import authenticateJwt from '../middlewares/authenticate-jwt.middleware';
