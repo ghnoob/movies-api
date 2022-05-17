@@ -1,5 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import isNumeric from 'validator/lib/isNumeric';
 import NormalizeQueryParamString from '../../../decorators/normalize-query-param-string.decorator';
 import Trim from '../../../decorators/trim.decorator';
 import PaginateDto from '../paginate.dto';
@@ -31,7 +32,7 @@ export default class FilterMovieDto extends PaginateDto {
       value = value[0];
     }
 
-    return !isNaN(value) ? Number(value) : null;
+    return typeof value === 'string' && isNumeric(value) ? Number(value) : null;
   })
   genre?: number | null;
 

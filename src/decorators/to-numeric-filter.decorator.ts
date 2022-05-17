@@ -19,7 +19,7 @@ export default function ToNumericFilter(options?: TransformOptions) {
     if (Array.isArray(value) && value.length > 0) {
       const [item] = value;
 
-      return { eq: !isNaN(item) ? Number(item) : null };
+      return { eq: isNumeric(item) ? Number(item) : null };
     }
 
     const result: NumericFilter = {};
@@ -35,7 +35,7 @@ export default function ToNumericFilter(options?: TransformOptions) {
           val = val[0];
         }
 
-        result[key] = !isNaN(val) ? Number(val) : null;
+        result[key] = isNumeric(val) ? Number(val) : null;
       }
     });
 
