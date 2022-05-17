@@ -1,3 +1,21 @@
+/**
+ * @swagger
+ * components:
+ *   responses:
+ *     MovieList:
+ *       description: Paginated list of movies
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: '#/components/schemas/PaginationResult'
+ *               - type: object
+ *                 properties:
+ *                   data:
+ *                     items:
+ *                       $ref: '#/components/schemas/Movie'
+ */
+
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { ForeignKeyConstraintError, UniqueConstraintError } from 'sequelize';
