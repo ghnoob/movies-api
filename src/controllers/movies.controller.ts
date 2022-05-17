@@ -26,6 +26,17 @@
  *                 readOnly: true
  *                 description: Id of the created movie.
  *                 example: 1
+ *
+ *     InvalidGenreId:
+ *       description: The `genreId` provided in the request does not correspond to a genre in the database.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 422
+ *             name: Unproccessable Entity
+ *             message: Genre with id 10 does not exist.
  */
 
 import { instanceToPlain } from 'class-transformer';
