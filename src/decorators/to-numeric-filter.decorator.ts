@@ -1,4 +1,5 @@
 import { Transform, TransformOptions } from 'class-transformer';
+import isNumeric from 'validator/lib/isNumeric';
 import NumericFilter from '../models/types/numeric-filter.type';
 
 /**
@@ -10,8 +11,8 @@ export default function ToNumericFilter(options?: TransformOptions) {
       return value;
     }
 
-    if (!isNaN(value)) {
-      return { eq: Number(value) };
+    if (typeof value === 'string') {
+      return { eq: isNumeric(value) ? Number(value) : null };
     }
 
     // if it is an array, use first element
