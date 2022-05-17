@@ -1,3 +1,119 @@
+/**
+ * @swagger
+ * components:
+ *   links:
+ *     GetAllCharacters:
+ *       operationId: getAllCharacters
+ *       parameters:
+ *         name: '$response.body#/name'
+ *         age: '$response.body#/age'
+ *         weight: '$response.body#/weight'
+ *       description: >
+ *         The `name`, `age` and `weight` values returned in the response can be used
+ *         as the query parameters of the same name in `GET /characters`
+ *
+ *     GetCharacterDetails:
+ *       operationId: getCharacterDetails
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `GET /characters/{id}`
+ *
+ *     UpdateCharacter:
+ *       operationId: updateCharacter
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `PATCH /characters/{id}`
+ *
+ *     DeleteCharacter:
+ *       operationId: deleteCharacter
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `DELETE /characters/{id}`
+ *
+ *   responses:
+ *     CharacterList:
+ *       description: Paginated list of characters
+ *       content:
+ *         application/json:
+ *           schema:
+ *             allOf:
+ *               - $ref: '#/components/schemas/PaginationResult'
+ *               - type: object
+ *                 properties:
+ *                   data:
+ *                     items:
+ *                       $ref: '#/components/schemas/Character'
+ *
+ *     CharacterDetails:
+ *       description: The found character
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CharacterDetails'
+ *       links:
+ *         getAllCharacters:
+ *           $ref: '#/components/links/GetAllCharacters'
+ *
+ *     CharacterCreated:
+ *       description: Character created successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id:
+ *                 type: integer
+ *                 readOnly: true
+ *                 description: Id of the created character.
+ *                 example: 1
+ *       links:
+ *         getCharacterDetails:
+ *           $ref: '#/components/links/GetCharacterDetails'
+ *         updateCharacter:
+ *           $ref: '#/components/links/UpdateCharacter'
+ *         deleteCharacter:
+ *           $ref: '#/components/links/DeleteCharacter'
+ *
+ *     CharacterUpdated:
+ *       description: Character updated successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character updated.
+ *
+ *     CharacterDeleted:
+ *       description: Character deleted successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character deleted.
+ *
+ *     CharacterNotFound:
+ *       description: Character not found.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 404
+ *             name: Not Found
+ *             message: Character not found.
+ */
+
 import { instanceToPlain } from 'class-transformer';
 import { Request, Response, NextFunction } from 'express';
 import { Service } from 'typedi';

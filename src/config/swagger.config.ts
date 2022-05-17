@@ -22,6 +22,7 @@ const swaggerConfig: Options = {
     join(__dirname, '..', 'errors', '*.error.ts'),
     join(__dirname, '..', 'middlewares', '*.middleware.ts'),
     join(__dirname, '..', 'models', '*.model.ts'),
+    join(__dirname, '..', 'models', 'types', '*.type.ts'),
     join(__dirname, '..', 'models', 'dto', '**', '*.dto.ts'),
     join(__dirname, '..', 'routes', '*.routes.ts'),
   ],
