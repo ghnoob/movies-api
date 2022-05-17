@@ -1,4 +1,5 @@
 import { Transform, TransformOptions } from 'class-transformer';
+import isNumeric from 'validator/lib/isNumeric';
 import NumericFilter from '../models/types/numeric-filter.type';
 
 /**
@@ -10,15 +11,17 @@ export default function ToNumericFilter(options?: TransformOptions) {
       return value;
     }
 
-    if (!isNaN(value)) {
-      return { eq: Number(value) };
+    if (typeof value === 'string') {
+      return { eq: isNumeric(value) ? Number(value) : null };
     }
 
     // if it is an array, use first element
     if (Array.isArray(value) && value.length > 0) {
       const [item] = value;
 
-      return { eq: !isNaN(item) ? Number(item) : null };
+      return {
+        eq: typeof item === 'string' && isNumeric(item) ? Number(item) : null,
+      };
     }
 
     const result: NumericFilter = {};
@@ -34,7 +37,8 @@ export default function ToNumericFilter(options?: TransformOptions) {
           val = val[0];
         }
 
-        result[key] = !isNaN(val) ? Number(val) : null;
+        result[key] =
+          typeof val === 'string' && isNumeric(val) ? Number(val) : null;
       }
     });
 

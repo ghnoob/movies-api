@@ -1,5 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import isNumeric from 'validator/lib/isNumeric';
 import NormalizeQueryParamString from '../../../decorators/normalize-query-param-string.decorator';
 import ToNumericFilter from '../../../decorators/to-numeric-filter.decorator';
 import Trim from '../../../decorators/trim.decorator';
@@ -34,10 +35,11 @@ export default class FilterCharacterDto extends PaginateDto {
 
     const ids: Array<number | null> = [];
 
-    return ids.concat(value).map((item: unknown) => {
-      const asNumber = Number(item);
-      return !Number.isNaN(asNumber) ? asNumber : null;
-    });
+    return ids
+      .concat(value)
+      .map((item: unknown) =>
+        typeof item === 'string' && isNumeric(item) ? Number(item) : null,
+      );
   })
   @Trim()
   movies?: Array<number | null>;

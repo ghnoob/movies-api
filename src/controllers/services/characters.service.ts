@@ -35,7 +35,7 @@ export default class CharactersService {
         }));
 
         conditions.push({
-          [prop]: { [Op.and]: constraints },
+          [prop]: { [Op.and]: [{ [Op.not]: null }, ...constraints] },
         });
       }
     });
