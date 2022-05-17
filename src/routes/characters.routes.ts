@@ -9,6 +9,21 @@
  *       summary: Get all characters
  *       parameters:
  *         - in: query
+ *           name: page
+ *           schema:
+ *             type: integer
+ *             minimum: 1
+ *             default: 1
+ *             description: Page number of the paginated result
+ *         - in: query
+ *           name: limit
+ *           schema:
+ *             type: integer
+ *             minimum: 1
+ *             maximum: 50
+ *             default: 50
+ *             description: Maximum number of items per page
+ *         - in: query
  *           name: name
  *           schema:
  *             type: string
