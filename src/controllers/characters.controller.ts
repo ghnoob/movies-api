@@ -112,6 +112,18 @@
  *             statusCode: 404
  *             name: Not Found
  *             message: Character not found.
+ *
+ *     InvalidCharacterId:
+ *       description: >
+ *         The `characterId` provided in the request does not correspond to a character in the database.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 422
+ *             name: Unproccessable Entity
+ *             message: Character with id 1 does not exist.
  */
 
 import { instanceToPlain } from 'class-transformer';
