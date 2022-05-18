@@ -6,7 +6,7 @@
  *       tags:
  *         - characters
  *       operationId: getAllCharacters
- *       summary: Get all characters
+ *       summary: Gets all characters
  *       parameters:
  *         - in: query
  *           name: page
@@ -85,7 +85,7 @@
  *       tags:
  *         - characters
  *       operationId: getCharacterDetails
- *       summary: Get a character details by its id
+ *       summary: Gets a character's details by its id
  *       parameters:
  *         - in: path
  *           name: id
@@ -105,7 +105,7 @@
  *       tags:
  *         - characters
  *       operationId: updateCharacter
- *       summary: Update a character
+ *       summary: Updates a character
  *       security:
  *         - bearerAuth: []
  *       parameters:
@@ -134,7 +134,7 @@
  *       tags:
  *         - characters
  *       operationId: deleteCharacter
- *       summary: Delete a character
+ *       summary: Deletes a character
  *       security:
  *         - bearerAuth: []
  *       parameters:

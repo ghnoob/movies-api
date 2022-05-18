@@ -14,7 +14,7 @@
  *           type: string
  *           maxLength: 30
  *           description: Genre name
- *           example: Action
+ *           example: Drama
  *         imageUrl:
  *           type: string
  *           nullable: true

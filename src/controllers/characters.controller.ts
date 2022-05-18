@@ -36,6 +36,14 @@
  *         The `id` value returned in the response can be used as the `id` param
  *         in `DELETE /characters/{id}`
  *
+ *     RemoveCharacterFromMovieCharacterId:
+ *       operationId: removeCharacterFromMovie
+ *       parameters:
+ *         characterId: '$response.body#/id'
+ *       description:
+ *         The `id` value returned in the response can be used as the `characterId` param
+ *         in `DELETE /movies/{movieId}/characters/{characterId}`
+ *
  *   responses:
  *     CharacterList:
  *       description: Paginated list of characters
@@ -79,6 +87,8 @@
  *           $ref: '#/components/links/UpdateCharacter'
  *         deleteCharacter:
  *           $ref: '#/components/links/DeleteCharacter'
+ *         removeCharacterFromMovie:
+ *           $ref: '#/components/links/RemoveCharacterFromMovieCharacterId'
  *
  *     CharacterUpdated:
  *       description: Character updated successfully.
@@ -112,6 +122,18 @@
  *             statusCode: 404
  *             name: Not Found
  *             message: Character not found.
+ *
+ *     InvalidCharacterId:
+ *       description: >
+ *         The `characterId` provided in the request does not correspond to a character in the database.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 422
+ *             name: Unproccessable Entity
+ *             message: Character with id 1 does not exist.
  */
 
 import { instanceToPlain } from 'class-transformer';
