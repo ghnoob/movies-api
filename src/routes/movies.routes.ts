@@ -178,6 +178,38 @@
  *           $ref: '#/components/responses/MovieCharacterAlreadyAdded'
  *         422:
  *           $ref: '#/components/responses/InvalidCharacterId'
+ *
+ *   /movies/{movieId}/characters/{characterId}:
+ *     delete:
+ *       tags:
+ *         - movies
+ *         - characters
+ *       operationId: removeCharacterFromMovie
+ *       summary: Removes a character from a movie
+ *       security:
+ *         - bearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: movieId
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Movie id
+ *         - in: path
+ *           name: characterId
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Character id
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/MovieCharacterRemoved'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         404:
+ *           $ref: '#/components/responses/MovieCharacterNotFound'
  */
 
 import { Service } from 'typedi';
