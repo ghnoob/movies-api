@@ -144,6 +144,17 @@
  *             statusCode: 409
  *             name: Conflict
  *             message: The character is already added to the movie.
+ *
+ *     MovieCharacterRemoved:
+ *       description: Character removed from movie successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character removed from movie.
  */
 
 import { instanceToPlain } from 'class-transformer';
