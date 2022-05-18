@@ -46,6 +46,17 @@
  *                 type: string
  *                 default: Movie updated.
  *
+ *     MovieDeleted:
+ *       description: Movie deleted successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Movie deleted.
+ *
  *     MovieNotFound:
  *       description: Movie not found.
  *       content:
