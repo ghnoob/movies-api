@@ -122,6 +122,17 @@
  *             statusCode: 422
  *             name: Unproccessable Entity
  *             message: Genre with id 10 does not exist.
+ *
+ *     MovieCharacterAdded:
+ *       description: Character added to movie successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Character added to movie
  */
 
 import { instanceToPlain } from 'class-transformer';
@@ -276,7 +287,7 @@ export default class MoviesController {
 
       await this.service.addCharacter(Number(req.params.id), req.body);
       return res
-        .status(HttpStatus.OK)
+        .status(HttpStatus.CREATED)
         .json({ message: 'Character added to movie' });
     } catch (err) {
       if (err instanceof UniqueConstraintError) {
