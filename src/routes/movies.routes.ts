@@ -45,6 +45,27 @@
  *       responses:
  *         200:
  *           $ref: '#/components/responses/MovieList'
+ *     post:
+ *       tags:
+ *         - movies
+ *       security:
+ *         - bearerAuth: []
+ *       summary: Creates a new movie
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/CreateMovieDto'
+ *       responses:
+ *         201:
+ *           $ref: '#/components/responses/MovieCreated'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         422:
+ *           $ref: '#/components/responses/InvalidGenreId'
  */
 
 import { Service } from 'typedi';
