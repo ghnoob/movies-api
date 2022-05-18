@@ -35,6 +35,17 @@
  *                 description: Id of the created movie.
  *                 example: 1
  *
+ *     MovieUpdated:
+ *       description: Movie updated successfully.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               message:
+ *                 type: string
+ *                 default: Movie updated.
+ *
  *     MovieNotFound:
  *       description: Movie not found.
  *       content:
