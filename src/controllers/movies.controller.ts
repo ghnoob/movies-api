@@ -1,6 +1,40 @@
 /**
  * @swagger
  * components:
+ *   links:
+ *     GetAllMovies:
+ *       operationId: getAllMovies
+ *       parameters:
+ *         title: '$response.body#/title'
+ *         genre: '$response.body#/genre/id'
+ *       description: >
+ *         The `title` and `genre.id` values returned in the response body can be used as the `title`
+ *         and `genre` query params, respectively, in `GET /movies`.
+ *
+ *     GetMovieDetails:
+ *       operationId: getMovieDetails
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `GET /movies/{id}`
+ *
+ *     UpdateMovie:
+ *       operationId: updateMovie
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `PATCH /movies/{id}`
+ *
+ *     DeleteMovie:
+ *       operationId: deleteMovie
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `DELETE /movies/{id}`
+ *
  *   responses:
  *     MovieList:
  *       description: Paginated list of movies.
@@ -17,6 +51,9 @@
  *
  *     MovieDetails:
  *       description: The found movie.
+ *       links:
+ *         getAllMovies:
+ *           $ref: '#/components/links/GetAllMovies'
  *       content:
  *         application/json:
  *           schema:
@@ -24,6 +61,13 @@
  *
  *     MovieCreated:
  *       description: Movie created successfully.
+ *       links:
+ *         getMovieDetails:
+ *           $ref: '#/components/links/GetMovieDetails'
+ *         updateMovie:
+ *           $ref: '#/components/links/UpdateMovie'
+ *         deleteMovie:
+ *           $ref: '#/components/links/DeleteMovie'
  *       content:
  *         application/json:
  *           schema:
