@@ -118,6 +118,30 @@
  *           $ref: '#/components/responses/MovieNotFound'
  *         422:
  *           $ref: '#/components/responses/InvalidGenreId'
+ *
+ *     delete:
+ *       tags:
+ *         - movies
+ *       operationId: deleteMovie
+ *       summary: Delete a movie
+ *       security:
+ *         - bearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Movie id
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/MovieDeleted'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         404:
+ *           $ref: '#/components/responses/MovieNotFound'
  */
 
 import { Service } from 'typedi';
