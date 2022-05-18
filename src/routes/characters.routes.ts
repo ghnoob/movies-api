@@ -146,7 +146,7 @@
  *           description: Character id
  *       responses:
  *         200:
- *           $ref: '#/components/responses/CharacterUpdated'
+ *           $ref: '#/components/responses/CharacterDeleted'
  *         400:
  *           $ref: '#/components/responses/ValidationError'
  *         401:
