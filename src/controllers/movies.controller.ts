@@ -27,6 +27,17 @@
  *                 description: Id of the created movie.
  *                 example: 1
  *
+ *     MovieNotFound:
+ *       description: Movie not found.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 404
+ *             name: Not Found
+ *             message: Movie not found.
+ *
  *     InvalidGenreId:
  *       description: The `genreId` provided in the request does not correspond to a genre in the database.
  *       content:
