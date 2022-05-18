@@ -3,7 +3,7 @@
  * components:
  *   responses:
  *     MovieList:
- *       description: Paginated list of movies
+ *       description: Paginated list of movies.
  *       content:
  *         application/json:
  *           schema:
@@ -14,6 +14,14 @@
  *                   data:
  *                     items:
  *                       $ref: '#/components/schemas/Movie'
+ *
+ *     MovieDetails:
+ *       description: The found movie.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/MovieDetails'
+ *
  *     MovieCreated:
  *       description: Movie created successfully.
  *       content:
