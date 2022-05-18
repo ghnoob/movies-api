@@ -66,6 +66,27 @@
  *           $ref: '#/components/responses/Unauthorized'
  *         422:
  *           $ref: '#/components/responses/InvalidGenreId'
+ *
+ *   /movies/{id}:
+ *     get:
+ *       tags:
+ *         - movies
+ *       operationId: getMovieDetails
+ *       summary: Get a movie's details by its id
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *             type: integer
+ *           description: Movie id
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/MovieDetails'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         404:
+ *           $ref: '#/components/responses/MovieNotFound'
  */
 
 import { Service } from 'typedi';
