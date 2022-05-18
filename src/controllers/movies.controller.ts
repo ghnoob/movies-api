@@ -35,6 +35,22 @@
  *         The `id` value returned in the response can be used as the `id` param
  *         in `DELETE /movies/{id}`
  *
+ *     AddCharacterToMovie:
+ *       operationId: addCharacterToMovie
+ *       parameters:
+ *         id: '$response.body#/id'
+ *       description: >
+ *         The `id` value returned in the response can be used as the `id` param
+ *         in `POST /movies/{id}/characters`
+ *
+ *     RemoveCharacterFromMovieMovieId:
+ *       operationId: removeCharacterFromMovie
+ *       parameters:
+ *         movieId: '$response.body#/id'
+ *       description:
+ *         The `id` value returned in the response can be used as the `movieId` param
+ *         in `DELETE /movies/{movieId}/characters/characterId`
+ *
  *   responses:
  *     MovieList:
  *       description: Paginated list of movies.
@@ -68,6 +84,10 @@
  *           $ref: '#/components/links/UpdateMovie'
  *         deleteMovie:
  *           $ref: '#/components/links/DeleteMovie'
+ *         addCharacterToMovie:
+ *           $ref: '#/components/links/AddCharacterToMovie'
+ *         removeCharacterFromMovie:
+ *           $ref: '#/components/links/RemoveCharacterFromMovieMovieId'
  *       content:
  *         application/json:
  *           schema:

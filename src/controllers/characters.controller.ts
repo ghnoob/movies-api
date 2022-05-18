@@ -36,6 +36,14 @@
  *         The `id` value returned in the response can be used as the `id` param
  *         in `DELETE /characters/{id}`
  *
+ *     RemoveCharacterFromMovieCharacterId:
+ *       operationId: removeCharacterFromMovie
+ *       parameters:
+ *         characterId: '$response.body#/id'
+ *       description:
+ *         The `id` value returned in the response can be used as the `characterId` param
+ *         in `DELETE /movies/{movieId}/characters/{characterId}`
+ *
  *   responses:
  *     CharacterList:
  *       description: Paginated list of characters
@@ -79,6 +87,8 @@
  *           $ref: '#/components/links/UpdateCharacter'
  *         deleteCharacter:
  *           $ref: '#/components/links/DeleteCharacter'
+ *         removeCharacterFromMovie:
+ *           $ref: '#/components/links/RemoveCharacterFromMovieCharacterId'
  *
  *     CharacterUpdated:
  *       description: Character updated successfully.
