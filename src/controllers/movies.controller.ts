@@ -155,6 +155,26 @@
  *               message:
  *                 type: string
  *                 default: Character removed from movie.
+ *
+ *     MovieCharacterNotFound:
+ *       description: Movie or character not found.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           examples:
+ *             movieNotFound:
+ *               summary: Movie was not found in the database
+ *               value:
+ *                 statusCode: 404
+ *                 name: Not Found
+ *                 message: Movie not found.
+ *             characterNotFound:
+ *               summary: Character was not found in the movie
+ *               value:
+ *                 statusCode: 404
+ *                 name: Not Found
+ *                 message: Character not found.
  */
 
 import { instanceToPlain } from 'class-transformer';
