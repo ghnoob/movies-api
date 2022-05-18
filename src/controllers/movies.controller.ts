@@ -133,6 +133,17 @@
  *               message:
  *                 type: string
  *                 default: Character added to movie
+ *
+ *     MovieCharacterAlreadyAdded:
+ *       description: The character is already added to the movie.
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/HttpError'
+ *           example:
+ *             statusCode: 409
+ *             name: Conflict
+ *             message: The character is already added to the movie.
  */
 
 import { instanceToPlain } from 'class-transformer';
