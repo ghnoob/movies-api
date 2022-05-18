@@ -142,6 +142,42 @@
  *           $ref: '#/components/responses/Unauthorized'
  *         404:
  *           $ref: '#/components/responses/MovieNotFound'
+ *
+ *   /movies/{id}/characters:
+ *     post:
+ *       tags:
+ *         - movies
+ *         - characters
+ *       operationId: addCharacterToMovie
+ *       summary: Add a character to a movie
+ *       security:
+ *         - bearerAuth: []
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           schema:
+ *             type: integer
+ *           required: true
+ *           description: Movie id
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AddMovieCharacterDto'
+ *       responses:
+ *         201:
+ *           $ref: '#/components/responses/MovieCharacterAdded'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         404:
+ *           $ref: '#/components/responses/MovieNotFound'
+ *         409:
+ *           $ref: '#/components/responses/MovieCharacterAlreadyAdded'
+ *         422:
+ *           $ref: '#/components/responses/InvalidCharacterId'
  */
 
 import { Service } from 'typedi';
