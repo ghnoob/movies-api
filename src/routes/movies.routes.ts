@@ -6,7 +6,7 @@
  *       tags:
  *         - movies
  *       operationId: getAllMovies
- *       summary: Get all movies
+ *       summary: Gets all movies
  *       parameters:
  *         - in: query
  *           name: page
@@ -72,7 +72,7 @@
  *       tags:
  *         - movies
  *       operationId: getMovieDetails
- *       summary: Get a movie's details by its id
+ *       summary: Gets a movie's details by its id
  *       parameters:
  *         - in: path
  *           name: id
@@ -123,7 +123,7 @@
  *       tags:
  *         - movies
  *       operationId: deleteMovie
- *       summary: Delete a movie
+ *       summary: Deletes a movie
  *       security:
  *         - bearerAuth: []
  *       parameters:
@@ -149,7 +149,7 @@
  *         - movies
  *         - characters
  *       operationId: addCharacterToMovie
- *       summary: Add a character to a movie
+ *       summary: Adds a character to a movie
  *       security:
  *         - bearerAuth: []
  *       parameters:
