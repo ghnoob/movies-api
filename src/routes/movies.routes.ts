@@ -87,6 +87,37 @@
  *           $ref: '#/components/responses/ValidationError'
  *         404:
  *           $ref: '#/components/responses/MovieNotFound'
+ *
+ *     patch:
+ *       tags:
+ *         - movies
+ *       operationId: updateMovie
+ *       security:
+ *         - bearerAuth: []
+ *       summary: Update a movie
+ *       parameters:
+ *         - in: path
+ *           name: id
+ *           required: true
+ *           schema:
+ *             type: integer
+ *           description: Movie id
+ *       requestBody:
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/UpdateMovieDto'
+ *       responses:
+ *         200:
+ *           $ref: '#/components/responses/MovieUpdated'
+ *         400:
+ *           $ref: '#/components/responses/ValidationError'
+ *         401:
+ *           $ref: '#/components/responses/Unauthorized'
+ *         404:
+ *           $ref: '#/components/responses/MovieNotFound'
+ *         422:
+ *           $ref: '#/components/responses/InvalidGenreId'
  */
 
 import { Service } from 'typedi';
