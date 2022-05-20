@@ -8,6 +8,7 @@ import AuthRoutes from './routes/auth.routes';
 import CharactersRoutes from './routes/characters.routes';
 import CommonRoutes from './routes/common.routes';
 import MoviesRoutes from './routes/movies.routes';
+import MailService from './controllers/services/mail.service';
 import errorHandler from './middlewares/error-handler.middleware';
 import errorLogger from './middlewares/error-logger.middleware';
 import fallbackErrorTransformer from './middlewares/fallback-error-transformer.middleware';
@@ -33,6 +34,11 @@ routes.forEach((route) => {
   app.use(route.getBasePath(), route.getRouter());
   logger.info(`Routes configured for ${route.getBasePath()}`);
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+app.on('event:userCreated', (email: any) =>
+  Container.get(MailService).send(email),
+);
 
 app.use(syntaxErrorHandler);
 
