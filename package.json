@@ -19,6 +19,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@sendgrid/mail": "7.7.0",
     "bcrypt": "5.0.1",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.2",
