@@ -4,6 +4,14 @@ REST API made for [Alkemy](https://alkemy.org)'s Node.js Backend Challenge.
 
 Manages information about movies, series and its characters.
 
+## Before running the app
+
+This app uses [SendGrid](https://sendgrid.com) to send emails. You'll need an account, an API key and
+a verified email address to being able to send emails.
+
+Also make sure to create a file named `.env` in the project root. You can paste the contents from
+[.env.example](./.env.example) in `.env` and add the required values.
+
 ## Start the app
 
 ```bash

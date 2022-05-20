@@ -7,7 +7,7 @@ import logger from '../logger';
  */
 const dbConfig: SequelizeOptions = {
   dialect: 'postgres',
-  host: process.env.DB_HOST || 'localhost',
+  host: process.env.DB_HOST || 'postgres',
   port: process.env.DB_PORT ? Number(process.env.DB_PORT) : 5432,
   database: process.env.DB_NAME || 'movies-api',
   username: process.env.DB_USER || 'postgres',
