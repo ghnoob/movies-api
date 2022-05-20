@@ -35,6 +35,7 @@
  *             name: Conflict
  *             message: Email is already in use.
  */
+
 import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
