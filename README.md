@@ -25,10 +25,13 @@ docker-compose up --build -d
 
 You can access the Swagger UI page at `/api`.
 
-## Running migrations
+## Migrations and seeders
 
-Since the migrations are written in TypeScript, you should compile them first using one of the
-following commands:
+Migrations and seeders are written in TypeScript. [sequelize-cli](https://www.npmjs.com/package/sequelize-cli)
+does not support TS, so you'll need to compile them before running the project if you don't have a `dist` folder
+in the project root with the compiled files, or after changing or creating the migrations and the seeders.
+
+To compile the `src/database` folder, use one of the following commands:
 
 ```bash
 # Compile database folder only
@@ -49,8 +52,7 @@ npm run build
 yarn build
 ```
 
-Then you can use [sequelize-cli](https://www.npmjs.com/package/sequelize-cli) (inside the
-docker container) to apply them as usual.
+Then you can use `sequelize-cli` (inside the docker container) to run them as usual.
 
 ## Info
 
