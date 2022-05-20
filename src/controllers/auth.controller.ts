@@ -35,12 +35,12 @@
  *             name: Conflict
  *             message: Email is already in use.
  */
-
 import { Request, Response, NextFunction } from 'express';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import appConfig from '../config/app.config';
 import HttpStatus from '../models/enums/http-status.enum';
+import User from '../models/user.model';
 
 /**
  * Controller for auth routes.
@@ -51,6 +51,8 @@ export default class AuthController {
    * Creates new account.
    */
   async register(req: Request, res: Response): Promise<Response> {
+    req.app.emit('event:userCreated', (req.user as User).email);
+
     return res.status(HttpStatus.CREATED).json({ user: req.user });
   }
 
