@@ -16,7 +16,9 @@
     "start": "NODE_ENV=production node ./dist/src/index.js",
     "start:dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "start:debug": "NODE_ENV=debug ts-node-dev --transpile-only --respawn --inspect=9229 src/index.ts",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "mocha -r ts-node/register \"tests/unit/**/*.spec.ts\"",
+    "test:coverage": "nyc --reporter=text yarn test"
   },
   "dependencies": {
     "@sendgrid/mail": "7.7.0",
