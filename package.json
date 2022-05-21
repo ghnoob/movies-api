@@ -9,8 +9,8 @@
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "build:database": "rm -rf dist && tsc -p ./tsconfig.database-only.json",
-    "format": "prettier --write ./src",
-    "lint": "eslint --fix ./src",
+    "format": "prettier --write .",
+    "lint": "eslint --fix .",
     "migration:generate": "ts-node ./database/generate-migration.ts",
     "prestart": "build",
     "start": "NODE_ENV=production node ./dist/src/index.js",
@@ -78,6 +78,6 @@
   },
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
-    "./src/**/*.ts": "prettier --write"
+    "./**/*.ts": "prettier --write"
   }
 }
