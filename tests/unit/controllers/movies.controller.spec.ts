@@ -46,10 +46,6 @@ describe('movies controller tests', () => {
     const query = { page: '1', limit: '1' };
     const req = mockReq({ query });
 
-    afterEach(() => {
-      service.findAll.reset();
-    });
-
     it('should return movies list', async () => {
       const paginationResult = { data: [], totalPages: 0, total: 0 };
       service.findAll.resolves(paginationResult);
@@ -74,10 +70,6 @@ describe('movies controller tests', () => {
   describe('findOne', () => {
     const params = { id: '1' };
     const req = mockReq({ params });
-
-    afterEach(() => {
-      service.findOne.reset();
-    });
 
     it('should return a movie', async () => {
       service.findOne.resolves(mockMovie);
@@ -125,10 +117,6 @@ describe('movies controller tests', () => {
     const body = { title: 'The Lion King', genreId: 1 };
     const req = mockReq({ body });
 
-    afterEach(() => {
-      service.create.reset();
-    });
-
     it('should return id of the created movie', async () => {
       service.create.resolves(mockMovie);
 
@@ -165,10 +153,6 @@ describe('movies controller tests', () => {
     const body = { title: 'The Lion King', genreId: 1 },
       params = { id: 1 };
     const req = mockReq({ body, params });
-
-    afterEach(() => {
-      service.update.reset();
-    });
 
     it('should return a success message', async () => {
       service.update.resolves(mockMovie);
@@ -219,10 +203,6 @@ describe('movies controller tests', () => {
   describe('delete', () => {
     const req = mockReq({ params: { id: 1 } });
 
-    afterEach(() => {
-      service.delete.reset();
-    });
-
     it('should return a success message', async () => {
       service.delete.resolves(1);
 
@@ -262,17 +242,9 @@ describe('movies controller tests', () => {
       body = { characterId: 1 };
     const req = mockReq({ params, body });
 
-    afterEach(() => {
-      service.exists.reset();
-    });
-
     describe('movie found', () => {
       beforeEach(() => {
         service.exists.resolves(true);
-      });
-
-      afterEach(() => {
-        service.addCharacter.reset();
       });
 
       it('should return success response', async () => {

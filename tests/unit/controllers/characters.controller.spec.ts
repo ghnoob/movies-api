@@ -33,10 +33,6 @@ describe('characters controller tests', () => {
     const query = { page: '1', limit: '1' };
     const req = mockReq({ query });
 
-    afterEach(() => {
-      service.findAll.reset();
-    });
-
     it('should return characters list', async () => {
       const paginationResult = { data: [], totalPages: 0, total: 0 };
       service.findAll.resolves(paginationResult);
@@ -61,10 +57,6 @@ describe('characters controller tests', () => {
   describe('findOne', () => {
     const params = { id: '1' };
     const req = mockReq({ params });
-
-    afterEach(() => {
-      service.findOne.reset();
-    });
 
     it('should return a character', async () => {
       const character = createStubInstance(Character);
@@ -111,10 +103,6 @@ describe('characters controller tests', () => {
   describe('create', () => {
     const req = mockReq({ body: { name: 'Simba' } });
 
-    afterEach(() => {
-      service.create.reset();
-    });
-
     it('should return id of the created character', async () => {
       const character = createStubInstance(Character);
       character.id = 1;
@@ -143,10 +131,6 @@ describe('characters controller tests', () => {
 
   describe('update', () => {
     const req = mockReq({ params: { id: 1 }, body: { name: 'Simba' } });
-
-    afterEach(() => {
-      service.update.reset();
-    });
 
     it('should return a success message', async () => {
       const character = createStubInstance(Character);
@@ -190,10 +174,6 @@ describe('characters controller tests', () => {
 
   describe('delete', () => {
     const req = mockReq({ params: { id: 1 } });
-
-    afterEach(() => {
-      service.delete.reset();
-    });
 
     it('should return a success message', async () => {
       service.delete.resolves(1);
