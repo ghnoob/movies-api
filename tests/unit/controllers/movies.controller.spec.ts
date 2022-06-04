@@ -2,8 +2,9 @@ import { expect, use } from 'chai';
 import { createStubInstance, match, SinonStubbedInstance, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { mockReq, mockRes } from 'sinon-express-mock';
-import { ForeignKeyConstraintError } from 'sequelize';
+import { ForeignKeyConstraintError, UniqueConstraintError } from 'sequelize';
 import Movie from '../../../src/models/movie.model';
+import MovieCharacter from '../../../src/models/movie-character.model';
 import MoviesController from '../../../src/controllers/movies.controller';
 import MoviesService from '../../../src/controllers/services/movies.service';
 import Genre from '../../../src/models/genre.model';
@@ -253,6 +254,95 @@ describe('movies controller tests', () => {
       await controller.delete(req, res, next);
 
       expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
+
+  describe('addCharacter', () => {
+    const params = { id: '1' },
+      body = { characterId: 1 };
+    const req = mockReq({ params, body });
+
+    afterEach(() => {
+      service.exists.reset();
+    });
+
+    describe('movie found', () => {
+      beforeEach(() => {
+        service.exists.resolves(true);
+      });
+
+      afterEach(() => {
+        service.addCharacter.reset();
+      });
+
+      it('should return success response', async () => {
+        service.addCharacter.resolves(createStubInstance(MovieCharacter));
+
+        await controller.addCharacter(req, res, next);
+
+        expect(service.exists).to.have.been.calledOnceWithExactly({ id: 1 });
+        expect(service.addCharacter).to.have.been.calledOnceWithExactly(
+          1,
+          body,
+        );
+        expect(res.status).to.have.been.calledOnceWithExactly(
+          HttpStatus.CREATED,
+        );
+      });
+
+      it('character already in movie - should call next with 409 error', async () => {
+        service.addCharacter.rejects(new UniqueConstraintError({}));
+
+        await controller.addCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(
+          match
+            .instanceOf(HttpError)
+            .and(match.has('status', HttpStatus.CONFLICT)),
+        );
+      });
+
+      it('character does not exist - call next with 422 error', async () => {
+        service.addCharacter.rejects(new ForeignKeyConstraintError({}));
+
+        await controller.addCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(
+          match
+            .instanceOf(HttpError)
+            .and(match.has('status', HttpStatus.UNPROCESSABLE_ENTITY)),
+        );
+      });
+    });
+
+    describe('movie not found', () => {
+      beforeEach(() => {
+        service.exists.resolves(false);
+      });
+
+      it('should call next with 404 error', async () => {
+        await controller.addCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(
+          match
+            .instanceOf(HttpError)
+            .and(match.has('status', HttpStatus.NOT_FOUND)),
+        );
+      });
+    });
+
+    describe('error', () => {
+      const err = new Error();
+
+      beforeEach(() => {
+        service.exists.rejects(err);
+      });
+
+      it('should call next with error', async () => {
+        await controller.addCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(err);
+      });
     });
   });
 });
