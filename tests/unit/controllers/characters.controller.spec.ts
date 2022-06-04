@@ -140,4 +140,51 @@ describe('characters controller tests', () => {
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
   });
+
+  describe('update', () => {
+    const req = mockReq({ params: { id: 1 }, body: { name: 'Simba' } });
+
+    afterEach(() => {
+      service.update.reset();
+    });
+
+    it('should return a success message', async () => {
+      const character = createStubInstance(Character);
+      character.id = 1;
+      character.name = 'Simba';
+
+      service.update.resolves(character);
+
+      await controller.update(req, res, next);
+
+      expect(service.update).to.have.been.calledOnceWithExactly(1, {
+        name: 'Simba',
+      });
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
+      expect(res.json).to.have.been.calledOnceWithExactly({
+        message: 'Character updated.',
+      });
+    });
+
+    it('should call next with 404 error', async () => {
+      service.update.resolves(null);
+
+      await controller.update(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.NOT_FOUND)),
+      );
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.update.rejects(err);
+
+      await controller.update(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
 });
