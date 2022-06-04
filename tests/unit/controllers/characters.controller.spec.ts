@@ -107,4 +107,37 @@ describe('characters controller tests', () => {
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
   });
+
+  describe('create', () => {
+    const req = mockReq({ body: { name: 'Simba' } });
+
+    afterEach(() => {
+      service.create.reset();
+    });
+
+    it('should return id of the created character', async () => {
+      const character = createStubInstance(Character);
+      character.id = 1;
+      character.name = 'Simba';
+
+      service.create.resolves(character);
+
+      await controller.create(req, res, next);
+
+      expect(service.create).to.have.been.calledOnceWithExactly({
+        name: 'Simba',
+      });
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.CREATED);
+      expect(res.json).to.have.been.calledOnceWithExactly({ id: 1 });
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.create.rejects(err);
+
+      await controller.create(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
 });
