@@ -2,6 +2,7 @@ import { expect, use } from 'chai';
 import { createStubInstance, match, SinonStubbedInstance, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { mockReq, mockRes } from 'sinon-express-mock';
+import { ForeignKeyConstraintError } from 'sequelize';
 import Movie from '../../../src/models/movie.model';
 import MoviesController from '../../../src/controllers/movies.controller';
 import MoviesService from '../../../src/controllers/services/movies.service';
@@ -114,6 +115,46 @@ describe('movies controller tests', () => {
       service.findOne.rejects(err);
 
       await controller.findOne(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
+
+  describe('create', () => {
+    const body = { title: 'The Lion King', genreId: 1 };
+    const req = mockReq({ body });
+
+    afterEach(() => {
+      service.create.reset();
+    });
+
+    it('should return id of the created movie', async () => {
+      service.create.resolves(mockMovie);
+
+      await controller.create(req, res, next);
+
+      expect(service.create).to.have.been.calledOnceWithExactly(body);
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.CREATED);
+      expect(res.json).to.have.been.calledOnceWithExactly({ id: 1 });
+    });
+
+    it('should return 422 error on bad genre id', async () => {
+      service.create.rejects(new ForeignKeyConstraintError({}));
+
+      await controller.create(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.UNPROCESSABLE_ENTITY)),
+      );
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.create.rejects(err);
+
+      await controller.create(req, res, next);
 
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
