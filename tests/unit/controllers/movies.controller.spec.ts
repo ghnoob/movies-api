@@ -159,4 +159,59 @@ describe('movies controller tests', () => {
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
   });
+
+  describe('update', () => {
+    const body = { title: 'The Lion King', genreId: 1 },
+      params = { id: 1 };
+    const req = mockReq({ body, params });
+
+    afterEach(() => {
+      service.update.reset();
+    });
+
+    it('should return a success message', async () => {
+      service.update.resolves(mockMovie);
+
+      await controller.update(req, res, next);
+
+      expect(service.update).to.have.been.calledOnceWithExactly(1, body);
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
+      expect(res.json).to.have.been.calledOnceWithExactly({
+        message: 'Movie updated.',
+      });
+    });
+
+    it('should call next with 404 error', async () => {
+      service.update.resolves(null);
+
+      await controller.update(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.NOT_FOUND)),
+      );
+    });
+
+    it('should return 422 error on bad genre id', async () => {
+      service.update.rejects(new ForeignKeyConstraintError({}));
+
+      await controller.update(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.UNPROCESSABLE_ENTITY)),
+      );
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.update.rejects(err);
+
+      await controller.update(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
 });
