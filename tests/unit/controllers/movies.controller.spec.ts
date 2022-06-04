@@ -317,4 +317,78 @@ describe('movies controller tests', () => {
       });
     });
   });
+
+  describe('removeCharacter', () => {
+    const req = mockReq({ params: { movieId: '1', characterId: '1' } });
+
+    describe('record deleted', () => {
+      beforeEach(() => {
+        service.removeCharacter.resolves(1);
+      });
+
+      it('should return 200 response', async () => {
+        await controller.removeCharacter(req, res, next);
+
+        expect(service.removeCharacter).to.have.been.calledOnceWithExactly(
+          1,
+          1,
+        );
+        expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
+      });
+    });
+
+    describe('record not deleted', () => {
+      beforeEach(() => {
+        service.removeCharacter.resolves(0);
+      });
+
+      it('movie does not exist', async () => {
+        service.exists.resolves(false);
+
+        await controller.removeCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(
+          match
+            .instanceOf(HttpError)
+            .and(
+              match({
+                status: HttpStatus.NOT_FOUND,
+                response: 'Movie not found.',
+              }),
+            ),
+        );
+      });
+
+      it('character does not exist', async () => {
+        service.exists.resolves(true);
+
+        await controller.removeCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(
+          match
+            .instanceOf(HttpError)
+            .and(
+              match({
+                status: HttpStatus.NOT_FOUND,
+                response: 'Character not found.',
+              }),
+            ),
+        );
+      });
+    });
+
+    describe('error', () => {
+      const err = new Error();
+
+      beforeEach(() => {
+        service.removeCharacter.rejects(err);
+      });
+
+      it('should call next with error', async () => {
+        await controller.removeCharacter(req, res, next);
+
+        expect(next).to.have.been.calledOnceWithExactly(err);
+      });
+    });
+  });
 });
