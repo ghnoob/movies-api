@@ -1,9 +1,12 @@
 import { expect, use } from 'chai';
-import { createStubInstance, SinonStubbedInstance, stub } from 'sinon';
+import { createStubInstance, match, SinonStubbedInstance, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { mockReq, mockRes } from 'sinon-express-mock';
+import Movie from '../../../src/models/movie.model';
 import MoviesController from '../../../src/controllers/movies.controller';
 import MoviesService from '../../../src/controllers/services/movies.service';
+import Genre from '../../../src/models/genre.model';
+import HttpError from '../../../src/errors/http.error';
 import HttpStatus from '../../../src/models/enums/http-status.enum';
 
 use(sinonChai);
@@ -14,6 +17,16 @@ describe('movies controller tests', () => {
 
   let controller: MoviesController,
     service: SinonStubbedInstance<MoviesService>;
+
+  const mockMovie = createStubInstance(Movie);
+  mockMovie.id = 1;
+  mockMovie.title = 'The Lion King';
+  mockMovie.genreId = 1;
+  mockMovie.genre = createStubInstance(Genre);
+  mockMovie.genre.id = 1;
+  mockMovie.genre.name = 'Drama';
+  mockMovie.createdAt = new Date('2022-01-01T00:00:00.000Z');
+  mockMovie.characters = [];
 
   beforeEach(() => {
     service = createStubInstance(MoviesService);
@@ -51,6 +64,56 @@ describe('movies controller tests', () => {
       service.findAll.rejects(err);
 
       await controller.findAll(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
+
+  describe('findOne', () => {
+    const params = { id: '1' };
+    const req = mockReq({ params });
+
+    afterEach(() => {
+      service.findOne.reset();
+    });
+
+    it('should return a movie', async () => {
+      service.findOne.resolves(mockMovie);
+
+      await controller.findOne(req, res, next);
+
+      expect(service.findOne).to.have.been.calledOnceWithExactly(1);
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
+      expect(res.json).callCount(1);
+      expect(res.json).to.have.been.calledWithMatch({
+        id: 1,
+        title: 'The Lion King',
+        genre: {
+          id: 1,
+          name: 'Drama',
+        },
+        createdAt: match.date,
+        characters: [],
+      });
+    });
+
+    it('should call next with 404 error', async () => {
+      service.findOne.resolves(null);
+
+      await controller.findOne(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.NOT_FOUND)),
+      );
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.findOne.rejects(err);
+
+      await controller.findOne(req, res, next);
 
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
