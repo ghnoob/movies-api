@@ -214,4 +214,45 @@ describe('movies controller tests', () => {
       expect(next).to.have.been.calledOnceWithExactly(err);
     });
   });
+
+  describe('delete', () => {
+    const req = mockReq({ params: { id: 1 } });
+
+    afterEach(() => {
+      service.delete.reset();
+    });
+
+    it('should return a success message', async () => {
+      service.delete.resolves(1);
+
+      await controller.delete(req, res, next);
+
+      expect(service.delete).to.have.been.calledOnceWithExactly(1);
+      expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
+      expect(res.json).to.have.been.calledOnceWithExactly({
+        message: 'Movie deleted.',
+      });
+    });
+
+    it('should call next with 404 error', async () => {
+      service.delete.resolves(0);
+
+      await controller.delete(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.NOT_FOUND)),
+      );
+    });
+
+    it('should call next with error', async () => {
+      const err = new Error();
+      service.delete.rejects(err);
+
+      await controller.delete(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
+  });
 });
