@@ -85,4 +85,14 @@ describe('characters service tests', () => {
       });
     });
   });
+
+  describe('findOne', () => {
+    it('should call findByPk with the correct parameter', async () => {
+      const mockFindByPk = sandbox.stub(Character, 'findByPk').resolves(null);
+
+      expect(await service.findOne(1)).to.be.null;
+
+      expect(mockFindByPk).to.have.been.calledOnceWith(1);
+    });
+  });
 });
