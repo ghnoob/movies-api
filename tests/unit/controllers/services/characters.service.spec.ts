@@ -108,4 +108,32 @@ describe('characters service tests', () => {
       expect(mockCreate).to.have.been.calledOnceWithExactly(dto);
     });
   });
+
+  describe('update', () => {
+    it('should return the updated character', async () => {
+      const mockCharacter = sandbox.createStubInstance(Character),
+        mockFindByPk = sandbox
+          .stub(Character, 'findByPk')
+          .resolves(mockCharacter);
+
+      mockCharacter.setAttributes.resolvesThis();
+      mockCharacter.save.resolvesThis();
+
+      const dto = { name: 'simba' };
+
+      expect(await service.update(1, dto)).to.equal(mockCharacter);
+
+      expect(mockFindByPk).to.have.been.calledOnceWithExactly(1);
+      expect(mockCharacter.setAttributes).to.have.been.calledOnceWithExactly(
+        dto,
+      );
+      expect(mockCharacter.save).to.have.been.calledOnce;
+    });
+
+    it('should return null', async () => {
+      sandbox.stub(Character, 'findByPk').resolves(null);
+
+      expect(await service.update(1, {})).to.be.null;
+    });
+  });
 });
