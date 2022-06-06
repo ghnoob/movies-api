@@ -6,6 +6,7 @@ import Movie from '../../../../src/models/movie.model';
 import MoviesService from '../../../../src/controllers/services/movies.service';
 import FilterMovieDto from '../../../../src/models/dto/movies/filter-movie.dto';
 import CreateMovieDto from '../../../../src/models/dto/movies/create-movie.dto';
+import UpdateMovieDto from '../../../../src/models/dto/movies/update-movie.dto';
 
 use(sinonChai);
 
@@ -98,6 +99,30 @@ describe('movies service tests', () => {
 
       expect(await service.create(dto)).to.equal(mockMovie);
       expect(mockCreate).to.have.been.calledOnceWithExactly(dto);
+    });
+  });
+
+  describe('update', () => {
+    it('should return the updated movie', async () => {
+      const mockMovie = sandbox.createStubInstance(Movie),
+        mockFindByPk = sandbox.stub(Movie, 'findByPk').resolves(mockMovie);
+
+      mockMovie.setAttributes.resolvesThis();
+      mockMovie.save.resolvesThis();
+
+      const dto: UpdateMovieDto = { title: 'star wars' };
+
+      expect(await service.update(1, dto)).to.equal(mockMovie);
+
+      expect(mockFindByPk).to.have.been.calledOnceWithExactly(1);
+      expect(mockMovie.setAttributes).to.have.been.calledOnceWithExactly(dto);
+      expect(mockMovie.save).to.have.been.calledOnce;
+    });
+
+    it('should return null', async () => {
+      sandbox.stub(Movie, 'findByPk').resolves(null);
+
+      expect(await service.update(1, {})).to.be.null;
     });
   });
 });
