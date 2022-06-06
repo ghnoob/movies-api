@@ -137,4 +137,20 @@ describe('movies service tests', () => {
       });
     });
   });
+
+  describe('exists', () => {
+    it('should return true', async () => {
+      sandbox
+        .stub(Movie, 'findOne')
+        .resolves(sandbox.createStubInstance(Movie));
+
+      expect(await service.exists({ id: 1 })).to.be.true;
+    });
+
+    it('should return false', async () => {
+      sandbox.stub(Movie, 'findOne').resolves(null);
+
+      expect(await service.exists({ id: 1 })).to.be.false;
+    });
+  });
 });
