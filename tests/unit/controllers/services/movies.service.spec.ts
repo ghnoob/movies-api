@@ -125,4 +125,16 @@ describe('movies service tests', () => {
       expect(await service.update(1, {})).to.be.null;
     });
   });
+
+  describe('delete', () => {
+    it('should call destroy with the correct parameters', async () => {
+      const mockDestroy = sandbox.stub(Movie, 'destroy').resolves(1);
+
+      expect(await service.delete(1)).to.equal(1);
+      expect(mockDestroy).to.have.been.called.calledOnceWithExactly({
+        where: { id: 1 },
+        limit: 1,
+      });
+    });
+  });
 });
