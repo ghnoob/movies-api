@@ -2,9 +2,9 @@ import { expect, use } from 'chai';
 import { col, fn, Op, where } from 'sequelize';
 import { createSandbox, match, SinonSandbox, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
+import Movie from '../../../../src/models/movie.model';
 import MoviesService from '../../../../src/controllers/services/movies.service';
 import FilterMovieDto from '../../../../src/models/dto/movies/filter-movie.dto';
-import Movie from '../../../../src/models/movie.model';
 
 use(sinonChai);
 
@@ -75,6 +75,16 @@ describe('movies service tests', () => {
         order: [['createdAt', 'ASC']],
         where: { [Op.and]: [] },
       });
+    });
+  });
+
+  describe('findOne', () => {
+    it('should call findByPk with the correct parameter', async () => {
+      const mockFindByPk = sandbox.stub(Movie, 'findByPk').resolves(null);
+
+      expect(await service.findOne(1)).to.be.null;
+
+      expect(mockFindByPk).to.have.been.calledOnceWith(1);
     });
   });
 });
