@@ -5,6 +5,7 @@ import sinonChai from 'sinon-chai';
 import Movie from '../../../../src/models/movie.model';
 import MoviesService from '../../../../src/controllers/services/movies.service';
 import FilterMovieDto from '../../../../src/models/dto/movies/filter-movie.dto';
+import CreateMovieDto from '../../../../src/models/dto/movies/create-movie.dto';
 
 use(sinonChai);
 
@@ -85,6 +86,18 @@ describe('movies service tests', () => {
       expect(await service.findOne(1)).to.be.null;
 
       expect(mockFindByPk).to.have.been.calledOnceWith(1);
+    });
+  });
+
+  describe('create', () => {
+    it('should call create with the correct arguments', async () => {
+      const mockMovie = sandbox.createStubInstance(Movie),
+        mockCreate = sandbox.stub(Movie, 'create').resolves(mockMovie);
+
+      const dto: CreateMovieDto = { title: 'star wars', genreId: 1 };
+
+      expect(await service.create(dto)).to.equal(mockMovie);
+      expect(mockCreate).to.have.been.calledOnceWithExactly(dto);
     });
   });
 });
