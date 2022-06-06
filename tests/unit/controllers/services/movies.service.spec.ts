@@ -7,6 +7,7 @@ import MoviesService from '../../../../src/controllers/services/movies.service';
 import FilterMovieDto from '../../../../src/models/dto/movies/filter-movie.dto';
 import CreateMovieDto from '../../../../src/models/dto/movies/create-movie.dto';
 import UpdateMovieDto from '../../../../src/models/dto/movies/update-movie.dto';
+import MovieCharacter from '../../../../src/models/movie-character.model';
 
 use(sinonChai);
 
@@ -134,6 +135,23 @@ describe('movies service tests', () => {
       expect(mockDestroy).to.have.been.called.calledOnceWithExactly({
         where: { id: 1 },
         limit: 1,
+      });
+    });
+  });
+
+  describe('addCharacter', () => {
+    it('should return the created association', async () => {
+      const mockMovieCharacter = sandbox.createStubInstance(MovieCharacter),
+        mockCreate = sandbox
+          .stub(MovieCharacter, 'create')
+          .resolves(mockMovieCharacter);
+
+      expect(await service.addCharacter(1, { characterId: 1 })).to.equal(
+        mockMovieCharacter,
+      );
+      expect(mockCreate).to.have.been.calledOnceWithExactly({
+        movieId: 1,
+        characterId: 1,
       });
     });
   });
