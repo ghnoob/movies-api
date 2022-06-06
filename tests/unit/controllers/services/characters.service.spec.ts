@@ -4,6 +4,7 @@ import { createSandbox, match, SinonSandbox, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import CharactersService from '../../../../src/controllers/services/characters.service';
 import Character from '../../../../src/models/character.model';
+import CreateCharacterDto from '../../../../src/models/dto/characters/create-character.dto';
 import FilterCharacterDto from '../../../../src/models/dto/characters/filter-character.dto';
 
 use(sinonChai);
@@ -93,6 +94,18 @@ describe('characters service tests', () => {
       expect(await service.findOne(1)).to.be.null;
 
       expect(mockFindByPk).to.have.been.calledOnceWith(1);
+    });
+  });
+
+  describe('create', () => {
+    it('should call Character.create with the correct arguments', async () => {
+      const mockCharacter = sandbox.createStubInstance(Character),
+        mockCreate = sandbox.stub(Character, 'create').resolves(mockCharacter);
+
+      const dto: CreateCharacterDto = { name: 'simba' };
+
+      expect(await service.create(dto)).to.equal(mockCharacter);
+      expect(mockCreate).to.have.been.calledOnceWithExactly(dto);
     });
   });
 });
