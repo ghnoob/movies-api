@@ -156,6 +156,21 @@ describe('movies service tests', () => {
     });
   });
 
+  describe('removeCharacter', () => {
+    it('should return the number of deleted records', async () => {
+      const mockDestroy = sandbox.stub(MovieCharacter, 'destroy').resolves(1);
+
+      expect(await service.removeCharacter(1, 1)).to.equal(1);
+      expect(mockDestroy).to.have.been.calledOnceWithExactly({
+        where: {
+          movieId: 1,
+          characterId: 1,
+        },
+        limit: 1,
+      });
+    });
+  });
+
   describe('exists', () => {
     it('should return true', async () => {
       sandbox
