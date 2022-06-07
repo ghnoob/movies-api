@@ -80,7 +80,8 @@ export default class HttpError extends Error {
   public getResponse(): JsonResponse {
     const res: JsonResponse = {
       statusCode: this.status,
-      name: STATUS_CODES[this.status] ?? '',
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      name: STATUS_CODES[this.status]!,
     };
 
     if (this.response) {
