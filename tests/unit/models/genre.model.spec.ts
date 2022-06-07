@@ -10,7 +10,7 @@ import Movie from '../../../src/models/movie.model';
 use(sinonChai);
 
 describe('genre model tests', () => {
-  it('a genre should have many books', () => {
+  it('a genre should have many movies', () => {
     const sequelize = new Sequelize({ validateOnly: true });
     sequelize.addModels([Genre, Movie, MovieCharacter, Character]);
 
