@@ -9,12 +9,26 @@ import {
 import sinonChai from 'sinon-chai';
 import { mockReq, mockRes } from 'sinon-express-mock';
 import passport from 'passport';
-import authenticateJwt from '../../../src/middlewares/authenticate-jwt.middleware';
+import { noCallThru } from 'proxyquire';
+import { Request, Response, NextFunction } from 'express';
 import HttpError from '../../../src/errors/http.error';
 import HttpStatus from '../../../src/models/enums/http-status.enum';
 import User from '../../../src/models/user.model';
 
 use(sinonChai);
+
+const proxyquire = noCallThru();
+
+const authenticateJwt: (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => Promise<void> = proxyquire(
+  '../../../src/middlewares/authenticate-jwt.middleware',
+  {
+    '../auth/jwt.strategy': stub().returnsThis(),
+  },
+).default;
 
 describe('authenticateJwt tests', () => {
   const req = mockReq(),
