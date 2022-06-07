@@ -40,8 +40,8 @@ function authenticateJwt(
   req: Request,
   res: Response,
   next: NextFunction,
-): void {
-  passport.authenticate('jwt', { session: false }, async (err, user) => {
+): Promise<void> {
+  return passport.authenticate('jwt', { session: false }, async (err, user) => {
     if (err) {
       return next(err);
     }
