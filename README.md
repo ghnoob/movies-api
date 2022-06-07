@@ -23,7 +23,7 @@ docker-compose up --build -d
 
 ## Docs
 
-You can access the Swagger UI page at `/api`.
+You can access the Swagger UI page at `/docs`.
 
 ## Migrations and seeders
 
