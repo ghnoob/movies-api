@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 
-app.use('/api', serve, setup(swaggerJSDoc(swaggerConfig)));
+app.use('/docs', serve, setup(swaggerJSDoc(swaggerConfig)));
 
 app.use(requestLogger);
 
