@@ -73,6 +73,14 @@ describe('auth integration tests', () => {
           message: 'Email is already in use.',
         });
       });
+
+      it('should return 500 status', async () => {
+        createUserStub.rejects(new Error());
+
+        const res = await request(app).post('/auth/register').send(body);
+
+        expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+      });
     });
 
     describe('invalid body', () => {
