@@ -12,18 +12,6 @@
  *             statusCode: 401
  *             name: Unauthorized
  *             message: Invalid authentication token.
- *
- *     UserNotFound:
- *       description: The provided token was valid but the user it represents is not in the database.
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/HttpError'
- *           example:
- *             statusCode: 404
- *             name: Not Found
- *             message: User not found.
- *
  */
 
 import { Request, Response, NextFunction } from 'express';
