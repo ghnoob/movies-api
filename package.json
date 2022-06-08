@@ -18,7 +18,8 @@
     "start:debug": "NODE_ENV=debug ts-node-dev --transpile-only --respawn --inspect=9229 src/index.ts",
     "prepare": "husky install",
     "test": "mocha --parallel --timeout 4000 -r ts-node/register \"tests/unit/**/*.spec.ts\"",
-    "test:coverage": "nyc --reporter=text yarn test"
+    "test:coverage": "nyc --reporter=text yarn test",
+    "test:integration": "mocha --parallel -r ts-node/register \"tests/integration/*.integration.spec.ts\""
   },
   "dependencies": {
     "@sendgrid/mail": "7.7.0",
