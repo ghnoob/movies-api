@@ -17,8 +17,9 @@
     "start:dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "start:debug": "NODE_ENV=debug ts-node-dev --transpile-only --respawn --inspect=9229 src/index.ts",
     "prepare": "husky install",
-    "test": "mocha --parallel --timeout 4000 -r ts-node/register \"tests/unit/**/*.spec.ts\"",
-    "test:coverage": "nyc --reporter=text yarn test"
+    "test": "NODE_ENV=test mocha --parallel --timeout 4000 -r ts-node/register \"tests/unit/**/*.spec.ts\"",
+    "test:coverage": "nyc --reporter=text yarn test",
+    "test:integration": "NODE_ENV=test mocha --parallel -r ts-node/register \"tests/integration/*.integration.spec.ts\""
   },
   "dependencies": {
     "@sendgrid/mail": "7.7.0",
@@ -66,6 +67,7 @@
     "@typescript-eslint/eslint-plugin": "5.19.0",
     "@typescript-eslint/parser": "5.19.0",
     "chai": "4.3.6",
+    "chai-http": "4.3.0",
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-import-resolver-typescript": "2.7.1",
