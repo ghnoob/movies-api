@@ -18,7 +18,7 @@
  */
 
 import { Expose } from 'class-transformer';
-import { Matches, MinLength } from 'class-validator';
+import { IsString, Matches, MinLength } from 'class-validator';
 import IsEqualToProperty from '../../../decorators/is-equal-to-property.decorator';
 import LoginDto from './login.dto';
 
@@ -43,6 +43,7 @@ export default class RegisterDto extends LoginDto {
    * Password confirmation.
    */
   @Expose()
+  @IsString()
   @IsEqualToProperty('password', { message: 'passwords do not match.' })
   passwordConfirmation!: string;
 }
