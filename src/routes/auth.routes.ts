@@ -38,8 +38,6 @@
  *           $ref: '#/components/responses/ValidationError'
  *         401:
  *           $ref: '#/components/responses/InvalidLoginCredentials'
- *         404:
- *           $ref: '#/components/responses/UserNotFound'
  *
  * components:
  *   responses:

@@ -54,23 +54,13 @@ describe('auth controller tests', () => {
       mockSign.reset();
     });
 
-    it('should return the signed token', async () => {
-      mockSign.resolves('test');
+    it('should return the signed token', () => {
+      mockSign.returns('test');
 
-      await controller.login(req, res, next);
+      controller.login(req, res);
 
       expect(res.status).to.have.been.calledOnceWithExactly(HttpStatus.OK);
       expect(res.json).to.have.been.calledOnceWithExactly({ token: 'test' });
-    });
-
-    it('should call next', async () => {
-      const err = new Error();
-
-      mockSign.rejects(err);
-
-      await controller.login(req, res, next);
-
-      expect(next).to.have.been.calledOnceWithExactly(err);
     });
   });
 });
