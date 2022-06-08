@@ -36,7 +36,7 @@
  *             message: Email is already in use.
  */
 
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { sign } from 'jsonwebtoken';
 import { Service } from 'typedi';
 import appConfig from '../config/app.config';
@@ -60,17 +60,9 @@ export default class AuthController {
   /**
    * Logs in to a created account.
    */
-  async login(
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<Response | void> {
-    try {
-      const token = await sign({ user: req.user }, appConfig.JWT_SECRET_KEY);
+  login(req: Request, res: Response): Response {
+    const token = sign({ user: req.user }, appConfig.JWT_SECRET_KEY);
 
-      return res.status(HttpStatus.OK).json({ token });
-    } catch (err) {
-      return next(err);
-    }
+    return res.status(HttpStatus.OK).json({ token });
   }
 }

@@ -70,7 +70,7 @@ describe('authenticateJwt tests', () => {
       expect(req.user).to.equal(mockToken);
     });
 
-    it('should call next with 404 error', async () => {
+    it('should call next with 401 error', async () => {
       sandbox.stub(User, 'findByPk').resolves(null);
 
       await authenticateJwt(req, res, next);
@@ -78,7 +78,7 @@ describe('authenticateJwt tests', () => {
       expect(next).to.have.been.calledOnceWithExactly(
         match
           .instanceOf(HttpError)
-          .and(match.has('status', HttpStatus.NOT_FOUND)),
+          .and(match.has('status', HttpStatus.UNAUTHORIZED)),
       );
     });
   });

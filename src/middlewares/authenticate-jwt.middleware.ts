@@ -12,18 +12,6 @@
  *             statusCode: 401
  *             name: Unauthorized
  *             message: Invalid authentication token.
- *
- *     UserNotFound:
- *       description: The provided token was valid but the user it represents is not in the database.
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/HttpError'
- *           example:
- *             statusCode: 404
- *             name: Not Found
- *             message: User not found.
- *
  */
 
 import { Request, Response, NextFunction } from 'express';
@@ -46,18 +34,10 @@ function authenticateJwt(
       return next(err);
     }
 
-    if (!user) {
+    if (!(user && (await User.findByPk(user.id, { attributes: ['id'] })))) {
       return next(
         new HttpError(HttpStatus.UNAUTHORIZED, 'Invalid authentication token'),
       );
-    }
-
-    /**
-     * Checks if user exists in the database.
-     * In case of the token of a deleted user being used.
-     */
-    if (!(await User.findByPk(user.id, { attributes: ['id'] }))) {
-      return next(new HttpError(HttpStatus.NOT_FOUND, 'User not found.'));
     }
 
     req.user = user;
