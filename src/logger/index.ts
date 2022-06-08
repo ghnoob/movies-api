@@ -6,7 +6,9 @@ import appConfig from '../config/app.config';
  */
 const logger = createLogger({
   level: appConfig.ENVIRONMENT === 'debug' ? 'debug' : 'info',
-  transports: [new transports.Console()],
+  transports: [
+    new transports.Console({ silent: appConfig.ENVIRONMENT === 'test' }),
+  ],
   format: format.combine(
     format.timestamp(),
     format.json(),
