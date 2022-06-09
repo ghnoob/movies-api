@@ -107,6 +107,14 @@ describe('/movies integration test', () => {
             'Genre with id 1 does not exist.',
           );
         });
+
+        it('should return 500 status code', async () => {
+          sandbox.stub(Movie, 'create').rejects(new Error());
+
+          const res = await request(app).post('/movies').send(body);
+
+          expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
       });
 
       describe('unauthenticated', () => {
