@@ -5,6 +5,7 @@ import { ForeignKeyConstraintError } from 'sequelize';
 import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
 import app from '../../src/express';
 import HttpStatus from '../../src/models/enums/http-status.enum';
+import Genre from '../../src/models/genre.model';
 import Movie from '../../src/models/movie.model';
 import User from '../../src/models/user.model';
 
@@ -113,6 +114,65 @@ describe('/movies integration test', () => {
 
           expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
         });
+      });
+    });
+  });
+
+  describe('/movies/:id', () => {
+    describe('get', () => {
+      it('should return 200 status code with a movie', async () => {
+        const mockGenre = sandbox.createStubInstance(Genre);
+        mockGenre.id = 1;
+        mockGenre.name = 'Drama';
+
+        const mockMovie = sandbox.createStubInstance(Movie);
+        mockMovie.id = 1;
+        mockMovie.genreId = 1;
+        mockMovie.genre = mockGenre;
+        mockMovie.createdAt = new Date('2022-01-01T00:00:00.000Z');
+        mockMovie.characters = [];
+
+        sandbox.stub(Movie, 'findByPk').resolves(mockMovie);
+
+        const res = await request(app).get('/movies/1');
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body).to.deep.equal({
+          id: 1,
+          genre: {
+            id: 1,
+            name: 'Drama',
+          },
+          createdAt: '2022-01-01T00:00:00.000Z',
+          characters: [],
+        });
+      });
+
+      it('should return a 400 status code', async () => {
+        const res = await request(app).get('/movies/abc');
+
+        expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+        expect(res.body)
+          .to.have.property('message')
+          .that.has.deep.property('errors', ['id must be a number string']);
+      });
+
+      it('should return a 404 status code', async () => {
+        sandbox.stub(Movie, 'findByPk').resolves(null);
+
+        const res = await request(app).get('/movies/1');
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+
+      it('should return a 500 status code', async () => {
+        sandbox.stub(Movie, 'findByPk').rejects(new Error());
+
+        const res = await request(app).get('/movies/1');
+
+        expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
       });
     });
   });
