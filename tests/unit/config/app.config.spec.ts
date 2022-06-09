@@ -1,10 +1,19 @@
 import { expect } from 'chai';
+import mockedEnv, { RestoreFn } from 'mocked-env';
 import { noPreserveCache } from 'proxyquire';
 
 const proxyquire = noPreserveCache();
 
 describe('app config tests', () => {
+  let restore: RestoreFn;
+
+  afterEach(() => {
+    restore();
+  });
+
   it('should use default config', () => {
+    restore = mockedEnv({ clear: true });
+
     const { default: appConfig } = proxyquire(
       '../../../src/config/app.config',
       {},
@@ -20,11 +29,13 @@ describe('app config tests', () => {
   });
 
   it('should use provided env variables', () => {
-    process.env.NODE_ENV = 'debug';
-    process.env.SERVER_PORT = '5500';
-    process.env.JWT_SECRET_KEY = 'abcdef';
-    process.env.SENDGRID_API_KEY = 'SG.abcdef';
-    process.env.SENDGRID_EMAIL = 'abc@def.com';
+    restore = mockedEnv({
+      NODE_ENV: 'debug',
+      SERVER_PORT: '5500',
+      JWT_SECRET_KEY: 'abcdef',
+      SENDGRID_API_KEY: 'SG.abcdef',
+      SENDGRID_EMAIL: 'abc@def.com',
+    });
 
     const { default: appConfig } = proxyquire(
       '../../../src/config/app.config',
@@ -38,13 +49,5 @@ describe('app config tests', () => {
       SENDGRID_API_KEY: 'SG.abcdef',
       SENDGRID_EMAIL: 'abc@def.com',
     });
-  });
-
-  after(() => {
-    delete process.env.NODE_ENV;
-    delete process.env.SERVER_PORT;
-    delete process.env.JWT_SECRET_KEY;
-    delete process.env.SENDGRID_API_KEY;
-    delete process.env.SENDGRID_EMAIL;
   });
 });

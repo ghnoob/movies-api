@@ -2,51 +2,46 @@ import { expect, use } from 'chai';
 import { noCallThru } from 'proxyquire';
 import { createSandbox } from 'sinon';
 import sinonChai from 'sinon-chai';
-
-const proxyquire = noCallThru();
+import appConfig from '../../src/config/app.config';
+import logger from '../../src/logger';
 
 use(sinonChai);
 
+const proxyquire = noCallThru();
+
 describe('index file tests', () => {
-  const sandbox = createSandbox();
+  let environmentTemp: string;
 
-  const cpSpawnStub = sandbox.stub(),
-    loggerStub = sandbox.stub();
+  const sandbox = createSandbox(),
+    cpSpawnStub = sandbox.stub(),
+    loggerStub = sandbox.stub(logger, 'info');
 
-  const overrides = (environment: string) => ({
-    'reflect-metadata': () => ({}),
+  const bootstrap: () => Promise<void> = proxyquire('../../src/bootstrap', {
     'child_process': {
       spawn: cpSpawnStub,
     },
-    'dotenv': {
-      config: () => 'test',
-    },
     'sequelize-typescript': {
-      Sequelize: sandbox.stub().callsFake(function () {
-        return { authenticate: () => ({}), sync: () => ({}) };
-      }),
+      Sequelize: function () {
+        return { authenticate: () => undefined, sync: () => undefined };
+      },
     },
-    './express': { listen: (_port: number, cb: () => void) => cb() },
-    './config/app.config': {
-      ENVIRONMENT: environment,
+    './express': {
+      listen: (_port: number, cb: () => void) => cb(),
     },
-    './config/db.config': {
-      validateOnly: true,
-    },
-    './logger': {
-      info: loggerStub,
-    },
+  }).default;
+
+  before(() => {
+    environmentTemp = appConfig.ENVIRONMENT;
   });
 
   afterEach(() => {
+    appConfig.ENVIRONMENT = environmentTemp;
     sandbox.resetHistory();
   });
 
   it('development', async () => {
-    const bootstrap = proxyquire(
-      '../../src/bootstrap',
-      overrides('development'),
-    ).default;
+    appConfig.ENVIRONMENT = 'development';
+
     await bootstrap();
 
     expect(cpSpawnStub).to.have.been.calledOnceWith(
@@ -55,10 +50,8 @@ describe('index file tests', () => {
   });
 
   it('debug', async () => {
-    const bootstrap = proxyquire(
-      '../../src/bootstrap',
-      overrides('debug'),
-    ).default;
+    appConfig.ENVIRONMENT = 'debug';
+
     await bootstrap();
 
     expect(cpSpawnStub).to.have.been.calledOnceWith(
@@ -67,10 +60,8 @@ describe('index file tests', () => {
   });
 
   it('production', async () => {
-    const bootstrap = proxyquire(
-      '../../src/bootstrap',
-      overrides('production'),
-    ).default;
+    appConfig.ENVIRONMENT = 'production';
+
     await bootstrap();
 
     expect(cpSpawnStub).to.not.have.been.called;
