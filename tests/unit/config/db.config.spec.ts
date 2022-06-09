@@ -1,18 +1,20 @@
 import { expect } from 'chai';
+import mockedEnv, { RestoreFn } from 'mocked-env';
 import { noPreserveCache } from 'proxyquire';
-import { stub } from 'sinon';
 
-const proxyquire = noPreserveCache();
+const proxyquire = noPreserveCache().noCallThru();
 
 describe('db config tests', () => {
+  let restore: RestoreFn;
+
+  afterEach(() => {
+    restore();
+  });
+
   it('should use default config', () => {
-    const dbConfig = proxyquire('../../../src/config/db.config', {
-      logger: {
-        default: {
-          debug: stub().returns(() => 'test'),
-        },
-      },
-    });
+    restore = mockedEnv({ clear: true });
+
+    const dbConfig = proxyquire('../../../src/config/db.config', {});
 
     expect(dbConfig).to.have.property('host', 'postgres');
     expect(dbConfig).to.have.property('port', 5432);
@@ -22,32 +24,20 @@ describe('db config tests', () => {
   });
 
   it('should use provided env variables', () => {
-    process.env.DB_HOST = 'localhost';
-    process.env.DB_PORT = '5433';
-    process.env.DB_NAME = 'abcdef';
-    process.env.DB_USER = 'user';
-    process.env.DB_PASS = 'password';
-
-    const dbConfig = proxyquire('../../../src/config/db.config', {
-      logger: {
-        default: {
-          debug: stub().returns(() => 'test'),
-        },
-      },
+    restore = mockedEnv({
+      DB_HOST: 'localhost',
+      DB_PORT: '5433',
+      DB_NAME: 'abcdef',
+      DB_USER: 'user',
+      DB_PASS: 'password',
     });
+
+    const dbConfig = proxyquire('../../../src/config/db.config', {});
 
     expect(dbConfig).to.have.property('host', 'localhost');
     expect(dbConfig).to.have.property('port', 5433);
     expect(dbConfig).to.have.property('database', 'abcdef');
     expect(dbConfig).to.have.property('username', 'user');
     expect(dbConfig).to.have.property('password', 'password');
-  });
-
-  after(() => {
-    delete process.env.DB_HOST;
-    delete process.env.DB_PORT;
-    delete process.env.DB_NAME;
-    delete process.env.DB_USER;
-    delete process.env.DB_PASS;
   });
 });
