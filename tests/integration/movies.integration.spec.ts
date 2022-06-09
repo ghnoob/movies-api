@@ -2,7 +2,12 @@ import { request, expect, use } from 'chai';
 import chaiHttp from 'chai-http';
 import passport from 'passport';
 import { ForeignKeyConstraintError } from 'sequelize';
-import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
+import {
+  createSandbox,
+  SinonSandbox,
+  SinonStub,
+  SinonStubbedInstance,
+} from 'sinon';
 import app from '../../src/express';
 import HttpStatus from '../../src/models/enums/http-status.enum';
 import Genre from '../../src/models/genre.model';
@@ -173,6 +178,92 @@ describe('/movies integration test', () => {
         const res = await request(app).get('/movies/1');
 
         expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+    });
+
+    describe('patch', () => {
+      const body = { title: 'The Lion King', genreId: 1 };
+
+      describe('authenticated', () => {
+        beforeEach(() => {
+          passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+        });
+
+        describe('movie found', () => {
+          let mockMovie: SinonStubbedInstance<Movie>;
+
+          beforeEach(() => {
+            mockMovie = sandbox.createStubInstance(Movie);
+
+            sandbox.stub(Movie, 'findByPk').resolves(mockMovie);
+            mockMovie.save.resolves(mockMovie);
+          });
+
+          it('should return 200 status code', async () => {
+            const res = await request(app).patch('/movies/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.OK);
+          });
+
+          it('should return 400 status code', async () => {
+            const res = await request(app)
+              .patch('/movies/1')
+              .send({ imageUrl: 'abc' });
+
+            expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+            expect(res.body)
+              .to.have.property('message')
+              .that.has.deep.property('errors', [
+                'imageUrl must be an URL address',
+              ]);
+          });
+
+          it('should return 422 status code', async () => {
+            mockMovie.save.rejects(new ForeignKeyConstraintError({}));
+
+            const res = await request(app).patch('/movies/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+
+            expect(res.body).to.have.property(
+              'message',
+              'Genre with id 1 does not exist.',
+            );
+          });
+
+          it('should return 500 status code', async () => {
+            mockMovie.save.rejects(new Error());
+
+            const res = await request(app).patch('/movies/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+          });
+        });
+
+        describe('movie not found', () => {
+          beforeEach(() => {
+            sandbox.stub(Movie, 'findByPk').resolves(null);
+          });
+
+          it('should return a 404 status code', async () => {
+            const res = await request(app).patch('/movies/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+          });
+        });
+      });
+
+      describe('unauthenticated', () => {
+        beforeEach(() => {
+          passportStub.yields(null, null);
+        });
+
+        it('should return 401 status code', async () => {
+          const res = await request(app).patch('/movies/1').send(body);
+
+          expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+        });
       });
     });
   });
