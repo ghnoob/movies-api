@@ -274,5 +274,59 @@ describe('/movies integration test', () => {
         });
       });
     });
+
+    describe('delete', () => {
+      describe('authenticated', () => {
+        beforeEach(() => {
+          passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+        });
+
+        it('should return a 200 status code', async () => {
+          sandbox.stub(Movie, 'destroy').resolves(1);
+
+          const res = await request(app).delete('/movies/1');
+
+          expect(res.status).to.equal(HttpStatus.OK);
+        });
+
+        it('should return a 400 status code', async () => {
+          const res = await request(app).delete('/movies/abc');
+
+          expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+          expect(res.body)
+            .to.have.property('message')
+            .that.has.deep.property('errors', ['id must be a number string']);
+        });
+
+        it('should return a 404 status code', async () => {
+          sandbox.stub(Movie, 'destroy').resolves(0);
+
+          const res = await request(app).delete('/movies/1');
+
+          expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+        });
+
+        it('should return a 500 status code', async () => {
+          sandbox.stub(Movie, 'destroy').rejects(new Error());
+
+          const res = await request(app).delete('/movies/1');
+
+          expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
+      });
+
+      describe('unauthenticated', () => {
+        beforeEach(() => {
+          passportStub.yields(null, null);
+        });
+
+        it('should return 401 status code', async () => {
+          const res = await request(app).delete('/movies/1');
+
+          expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+        });
+      });
+    });
   });
 });
