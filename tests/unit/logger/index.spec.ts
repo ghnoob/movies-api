@@ -15,7 +15,7 @@ describe('logger tests', () => {
     expect(logger.level).to.equal('info');
   });
 
-  it('should be called with non debug info', () => {
+  it('should be called with debug info', () => {
     const logger: Logger = proxyquire('../../../src/logger', {
       '../config/app.config': {
         default: {
