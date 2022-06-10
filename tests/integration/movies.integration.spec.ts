@@ -68,7 +68,7 @@ describe('/movies integration test', () => {
 
       describe('authenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+          passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
         });
 
         it('should return 201 status code', async () => {
@@ -120,7 +120,7 @@ describe('/movies integration test', () => {
 
       describe('unauthenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, null);
+          passportStub.yieldsAsync(null, null);
         });
 
         it('should return 401 status code', async () => {
@@ -195,7 +195,7 @@ describe('/movies integration test', () => {
 
       describe('authenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+          passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
         });
 
         describe('movie found', () => {
@@ -265,7 +265,7 @@ describe('/movies integration test', () => {
 
       describe('unauthenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, null);
+          passportStub.yieldsAsync(null, null);
         });
 
         it('should return 401 status code', async () => {
@@ -279,7 +279,7 @@ describe('/movies integration test', () => {
     describe('delete', () => {
       describe('authenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+          passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
         });
 
         it('should return a 200 status code', async () => {
@@ -319,7 +319,7 @@ describe('/movies integration test', () => {
 
       describe('unauthenticated', () => {
         beforeEach(() => {
-          passportStub.yields(null, null);
+          passportStub.yieldsAsync(null, null);
         });
 
         it('should return 401 status code', async () => {
@@ -336,7 +336,7 @@ describe('/movies integration test', () => {
 
     describe('authenticated', () => {
       beforeEach(() => {
-        passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+        passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
       });
 
       describe('movie exists', () => {
@@ -424,7 +424,7 @@ describe('/movies integration test', () => {
 
     describe('unauthenticated', () => {
       beforeEach(() => {
-        passportStub.yields(null, null);
+        passportStub.yieldsAsync(null, null);
       });
 
       it('should return 401 status code', async () => {
@@ -438,7 +438,7 @@ describe('/movies integration test', () => {
   describe('DELETE /movies/:idMovie/characters/:idCharacter', () => {
     describe('authenticated', () => {
       beforeEach(() => {
-        passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+        passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
       });
 
       describe('relation found', () => {
