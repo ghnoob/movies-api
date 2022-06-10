@@ -14,12 +14,17 @@
  *             errors:
  *               - example validation error
  */
-
-import { ClassConstructor, plainToInstance } from 'class-transformer';
-import { validate } from 'class-validator';
+import { ValidationError } from 'class-validator';
+import { transformAndValidate, ClassType } from 'class-transformer-validator';
 import { Request, Response, NextFunction } from 'express';
 import HttpError from '../errors/http.error';
 import HttpStatus from '../models/enums/http-status.enum';
+
+function isValidationErrorArray(obj: unknown): obj is ValidationError[] {
+  return (
+    Array.isArray(obj) && obj.every((item) => item instanceof ValidationError)
+  );
+}
 
 type RequestField = 'body' | 'params' | 'query';
 
@@ -34,34 +39,44 @@ type RequestField = 'body' | 'params' | 'query';
  * Else it will pass thw validation error to the error handler.
  */
 export default function validateRequest(
-  c: ClassConstructor<object>,
+  c: ClassType<object>,
   field: RequestField = 'body',
-  whitelist = true,
 ) {
-  return async function transformAndValidate(
+  return async function performValidation(
     req: Request,
     _res: Response,
     next: NextFunction,
   ) {
-    const toValidate = plainToInstance(c, req[field] ?? {}, {
-      exposeUnsetFields: false,
-      excludeExtraneousValues: true,
-    });
-
-    const validationErrors = await validate(toValidate, { whitelist });
-
-    if (validationErrors.length > 0) {
-      const error = new HttpError(HttpStatus.BAD_REQUEST, {
-        description: 'Validation error.',
-        errors: validationErrors.flatMap((err) =>
-          Object.values(err.constraints as Record<string, string>),
-        ),
+    try {
+      const validated = await transformAndValidate(c, req[field], {
+        transformer: {
+          exposeUnsetFields: false,
+          excludeExtraneousValues: true,
+        },
+        validator: {
+          validationError: {
+            target: false,
+            value: false,
+          },
+        },
       });
-      return next(error);
+
+      req[field] = validated;
+
+      return next();
+    } catch (err) {
+      if (isValidationErrorArray(err)) {
+        const httpError = new HttpError(HttpStatus.BAD_REQUEST, {
+          description: 'Validation error.',
+          errors: err.flatMap((validationError) =>
+            Object.values(validationError.constraints ?? {}),
+          ),
+        });
+
+        return next(httpError);
+      }
+
+      return next(err);
     }
-
-    req[field] = toValidate;
-
-    return next();
   };
 }
