@@ -1,7 +1,7 @@
 import { request, expect, use } from 'chai';
 import chaiHttp from 'chai-http';
 import passport from 'passport';
-import { ForeignKeyConstraintError } from 'sequelize';
+import { ForeignKeyConstraintError, UniqueConstraintError } from 'sequelize';
 import {
   createSandbox,
   SinonSandbox,
@@ -11,6 +11,7 @@ import {
 import app from '../../src/express';
 import HttpStatus from '../../src/models/enums/http-status.enum';
 import Genre from '../../src/models/genre.model';
+import MovieCharacter from '../../src/models/movie-character.model';
 import Movie from '../../src/models/movie.model';
 import User from '../../src/models/user.model';
 
@@ -326,6 +327,110 @@ describe('/movies integration test', () => {
 
           expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
         });
+      });
+    });
+  });
+
+  describe('POST /movies/:id/characters', () => {
+    const body = { characterId: 1 };
+
+    describe('authenticated', () => {
+      beforeEach(() => {
+        passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+      });
+
+      describe('movie exists', () => {
+        beforeEach(() => {
+          sandbox
+            .stub(Movie, 'findOne')
+            .resolves(sandbox.createStubInstance(Movie));
+        });
+
+        it('should return a 201 status code', async () => {
+          sandbox
+            .stub(MovieCharacter, 'create')
+            .resolves(sandbox.createStubInstance(MovieCharacter));
+
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send(body);
+
+          expect(res.status).to.equal(HttpStatus.CREATED);
+        });
+
+        it('should return a 400 status code', async () => {
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send({ characterId: '1' });
+
+          expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+          expect(res.body)
+            .to.have.property('message')
+            .that.has.deep.property('errors', [
+              'characterId must be an integer number',
+            ]);
+        });
+
+        it('should return a 409 status code', async () => {
+          sandbox
+            .stub(MovieCharacter, 'create')
+            .rejects(new UniqueConstraintError({}));
+
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send(body);
+
+          expect(res.status).to.equal(HttpStatus.CONFLICT);
+        });
+
+        it('should return a 422 status code', async () => {
+          sandbox
+            .stub(MovieCharacter, 'create')
+            .rejects(new ForeignKeyConstraintError({}));
+
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send(body);
+
+          expect(res.status).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+        });
+
+        it('should return a 500 status code', async () => {
+          sandbox.stub(MovieCharacter, 'create').rejects(new Error());
+
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send(body);
+
+          expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
+      });
+
+      describe('movie does not exist', () => {
+        beforeEach(() => {
+          sandbox.stub(Movie, 'findOne').resolves(null);
+        });
+
+        it('should return a 404 status code', async () => {
+          const res = await request(app)
+            .post('/movies/1/characters')
+            .send(body);
+
+          expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+        });
+      });
+    });
+
+    describe('unauthenticated', () => {
+      beforeEach(() => {
+        passportStub.yields(null, null);
+      });
+
+      it('should return 401 status code', async () => {
+        const res = await request(app).post('/movies/1/characters').send(body);
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
       });
     });
   });
