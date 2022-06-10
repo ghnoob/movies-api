@@ -434,4 +434,73 @@ describe('/movies integration test', () => {
       });
     });
   });
+
+  describe('DELETE /movies/:idMovie/characters/:idCharacter', () => {
+    describe('authenticated', () => {
+      beforeEach(() => {
+        passportStub.yields(null, { id: 1, email: 'abc@gmail.com' });
+      });
+
+      describe('relation found', () => {
+        beforeEach(() => {
+          sandbox.stub(MovieCharacter, 'destroy').resolves(1);
+        });
+
+        it('should return a 200 status code', async () => {
+          const res = await request(app).delete('/movies/1/characters/1');
+
+          expect(res.status).to.equal(HttpStatus.OK);
+        });
+
+        it('should return a 400 status code', async () => {
+          const res = await request(app).delete('/movies/abc/characters/def');
+
+          expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+          expect(res.body)
+            .to.have.property('message')
+            .that.has.deep.property('errors', [
+              'movieId must be a number string',
+              'characterId must be a number string',
+            ]);
+        });
+      });
+
+      describe('relation not found', () => {
+        beforeEach(() => {
+          sandbox.stub(MovieCharacter, 'destroy').resolves(0);
+        });
+
+        it('should return a 404 status code - movie not found', async () => {
+          sandbox.stub(Movie, 'findOne').resolves(null);
+
+          const res = await request(app).delete('/movies/1/characters/1');
+
+          expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+
+          expect(res.body).to.have.property('message', 'Movie not found.');
+        });
+
+        it('should return a 404 status code - character not found', async () => {
+          sandbox
+            .stub(Movie, 'findOne')
+            .resolves(sandbox.createStubInstance(Movie));
+
+          const res = await request(app).delete('/movies/1/characters/1');
+
+          expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+
+          expect(res.body).to.have.property('message', 'Character not found.');
+        });
+
+        it('should return a 500 status code', async () => {
+          sandbox.stub(Movie, 'findOne').rejects(new Error());
+
+          const res = await request(app).delete('/movies/1/characters/1');
+
+          expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+        });
+      });
+    });
+  });
 });
