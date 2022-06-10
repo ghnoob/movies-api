@@ -3,7 +3,7 @@ import { stub, match } from 'sinon';
 import sinonChai from 'sinon-chai';
 import { mockReq, mockRes } from 'sinon-express-mock';
 import { Expose } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsString, ValidationError } from 'class-validator';
 import proxyquire from 'proxyquire';
 import validateRequest from '../../../src/middlewares/validate-request.middleware';
 import HttpError from '../../../src/errors/http.error';
@@ -25,43 +25,81 @@ describe('validate request middleware tests', () => {
     next.resetHistory();
   });
 
-  it('should pass validation', async () => {
-    const req = mockReq({ body: { foo: 'string' } });
+  describe('validator not mocked', () => {
+    it('should pass validation', async () => {
+      const req = mockReq({ body: { foo: 'string' } });
 
-    await validateRequest(ExampleClass)(req, res, next);
+      await validateRequest(ExampleClass)(req, res, next);
 
-    expect(req.body).to.be.instanceof(ExampleClass);
-    expect(next).to.have.been.calledOnceWithExactly();
+      expect(req.body).to.be.instanceof(ExampleClass);
+      expect(next).to.have.been.calledOnceWithExactly();
+    });
+
+    it('should not pass validation', async () => {
+      const req = mockReq({ body: { foo: 1234 } });
+
+      await validateRequest(ExampleClass)(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.BAD_REQUEST))
+          .and(
+            match.has(
+              'response',
+              match.has(
+                'errors',
+                match.array.deepEquals(['foo must be a string']),
+              ),
+            ),
+          ),
+      );
+    });
   });
 
-  it('should not pass validation', async () => {
-    const req = mockReq({ body: { foo: 1234 } });
-
-    await validateRequest(ExampleClass)(req, res, next);
-
-    expect(next).to.have.been.calledOnceWithExactly(
-      match
-        .instanceOf(HttpError)
-        .and(match.has('status', HttpStatus.BAD_REQUEST)),
-    );
-  });
-
-  it('should pass empty object on undefined body', async () => {
-    const req = mockReq({ body: undefined });
-
-    const plainToInstanceStub = stub().returns(new ExampleClass()),
-      spiedMiddleware = proxyquire(
+  describe('validator mocked', () => {
+    const validatorStub = stub(),
+      validateRequest = proxyquire(
         '../../../src/middlewares/validate-request.middleware',
         {
-          'class-transformer': {
-            plainToInstance: plainToInstanceStub,
+          'class-transformer-validator': {
+            transformAndValidate: validatorStub,
           },
         },
       ).default;
 
-    await spiedMiddleware(ExampleClass)(req, res, next);
+    const req = mockReq();
 
-    expect(plainToInstanceStub).to.have.been.calledOnce;
-    expect(plainToInstanceStub.lastCall.args[1]).to.deep.equal({});
+    afterEach(() => {
+      validatorStub.reset();
+    });
+
+    it('should return empty error list on empty validation error', async () => {
+      validatorStub.rejects([new ValidationError()]);
+
+      await validateRequest(ExampleClass)(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(
+        match
+          .instanceOf(HttpError)
+          .and(match.has('status', HttpStatus.BAD_REQUEST))
+          .and(
+            match.has(
+              'response',
+              match.has('errors', match.array.deepEquals([])),
+            ),
+          ),
+      );
+    });
+
+    it('should return next on error', async () => {
+      const err = new Error();
+
+      validatorStub.rejects(err);
+
+      await validateRequest(ExampleClass)(req, res, next);
+
+      expect(next).to.have.been.calledOnceWithExactly(err);
+    });
   });
 });
