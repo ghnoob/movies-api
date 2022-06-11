@@ -1,7 +1,9 @@
 import { expect } from 'chai';
-import proxyquire from 'proxyquire';
+import { noCallThru } from 'proxyquire';
 import { createStubInstance, stub } from 'sinon';
 import User from '../../../src/models/user.model';
+
+const proxyquire = noCallThru();
 
 describe('user model tests', () => {
   const compareStub = stub();
