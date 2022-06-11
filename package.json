@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "lint": "eslint --fix .",
     "migration:generate": "ts-node ./database/generate-migration.ts",
+    "migrator": "ts-node ./src/scripts/migrator.ts",
     "prestart": "build",
     "start": "NODE_ENV=production node ./dist/src/index.js",
     "start:dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
