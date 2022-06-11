@@ -14,45 +14,28 @@ Also make sure to create a file named `.env` in the project root. You can paste 
 
 ## Start the app
 
-```bash
-yarn install
+### Development
 
-# for debug mode: docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build -d
+```bash
 docker-compose up --build -d
+```
+
+### Debug
+
+```
+docker-compose -f docker-compose.yml -f docker-compose.debug.yml up --build -d
 ```
 
 ## Docs
 
 You can access the Swagger UI page at `/docs`.
 
-## Migrations and seeders
+## Migrations
 
-Migrations and seeders are written in TypeScript. [sequelize-cli](https://www.npmjs.com/package/sequelize-cli)
-does not support TS, so you'll need to compile them before running the project if you don't have a `dist` folder
-in the project root with the compiled files, or after changing or creating the migrations and the seeders.
+You can run the migrations using `docker-compose exec app yarn migrator run`.
+Also you can use `docker-compose exec app yarn migrator -h` to get more useful commands.
 
-To compile the `src/database` folder, use one of the following commands:
-
-```bash
-# Compile database folder only
-
-## npm
-npm run build:database
-
-## yarn
-yarn build:database
-
-
-# Compile whole project (so you can run the project using `node ./dist/index.js` too)
-
-## npm
-npm run build
-
-## yarn
-yarn build
-```
-
-Then you can use `sequelize-cli` (inside the docker container) to run them as usual.
+Seeders are run automatically when you start the app in dev or debug mode.
 
 ## Info
 

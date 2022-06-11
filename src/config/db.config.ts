@@ -16,5 +16,4 @@ const dbConfig: SequelizeOptions = {
   models: [join(__dirname, '..', 'models')],
 };
 
-// has to be exported this way so sequelize-cli is able to read it
-export = dbConfig;
+export default dbConfig;

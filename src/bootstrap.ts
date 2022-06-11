@@ -1,29 +1,24 @@
 import 'reflect-metadata';
-import { spawn } from 'child_process';
 import { config } from 'dotenv';
-import { Sequelize } from 'sequelize-typescript';
+import { Container } from 'typedi';
 
 config();
 
+import DbConnection from './database/connection';
 import app from './express';
 import appConfig from './config/app.config';
-import dbConfig from './config/db.config';
 import logger from './logger';
+import Seeder from './database/seeder';
 
 export default async function bootstrap() {
-  const db = new Sequelize(dbConfig);
+  const db = Container.get(DbConnection).getConnection();
+
   await db.authenticate();
 
   if (appConfig.ENVIRONMENT !== 'production') {
     await db.sync({ force: true });
 
-    let command = 'npx sequelize db:seed:all';
-
-    if (appConfig.ENVIRONMENT === 'debug') {
-      command += ' --debug';
-    }
-
-    spawn(command, { shell: true });
+    await Container.get(Seeder).initialize();
   }
 
   logger.info('Database connected.');

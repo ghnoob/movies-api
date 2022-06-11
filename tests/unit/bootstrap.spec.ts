@@ -1,70 +1,78 @@
+import { Server } from 'http';
 import { expect, use } from 'chai';
 import { noCallThru } from 'proxyquire';
-import { createSandbox } from 'sinon';
+import { Sequelize } from 'sequelize-typescript';
+import { createSandbox, SinonSandbox, SinonSpy, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import appConfig from '../../src/config/app.config';
+import app from '../../src/express';
 import logger from '../../src/logger';
+import DbConnection from '../../src/database/connection';
+import Seeder from '../../src/database/seeder';
 
 use(sinonChai);
 
 const proxyquire = noCallThru();
 
-describe('index file tests', () => {
-  let environmentTemp: string;
-
-  const sandbox = createSandbox(),
-    cpSpawnStub = sandbox.stub(),
-    loggerStub = sandbox.stub(logger, 'info');
-
-  const bootstrap: () => Promise<void> = proxyquire('../../src/bootstrap', {
-    'child_process': {
-      spawn: cpSpawnStub,
-    },
-    'sequelize-typescript': {
-      Sequelize: function () {
-        return { authenticate: () => undefined, sync: () => undefined };
-      },
-    },
-    './express': {
-      listen: (_port: number, cb: () => void) => cb(),
-    },
-  }).default;
+describe('bootstrap tests', () => {
+  let sandbox: SinonSandbox,
+    bootstrap: () => Promise<void>,
+    containerStub: SinonStub,
+    loggerSpy: SinonSpy;
 
   before(() => {
-    environmentTemp = appConfig.ENVIRONMENT;
+    sandbox = createSandbox();
+  });
+
+  beforeEach(() => {
+    containerStub = sandbox
+      .stub()
+      .onFirstCall()
+      .returns(
+        sandbox.createStubInstance(DbConnection, {
+          getConnection: sandbox.createStubInstance(Sequelize),
+        }),
+      )
+      .onSecondCall()
+      .returns(sandbox.createStubInstance(Seeder));
+
+    sandbox.stub(app, 'listen').callsFake((_port: number, cb?: () => void) => {
+      if (cb) {
+        cb();
+      }
+
+      return sandbox.createStubInstance(Server);
+    });
+
+    loggerSpy = sandbox.spy(logger, 'info');
+
+    bootstrap = proxyquire('../../src/bootstrap', {
+      typedi: {
+        Container: {
+          get: containerStub,
+        },
+      },
+    }).default;
   });
 
   afterEach(() => {
-    appConfig.ENVIRONMENT = environmentTemp;
-    sandbox.resetHistory();
+    sandbox.restore();
   });
 
   it('development', async () => {
-    appConfig.ENVIRONMENT = 'development';
+    sandbox.stub(appConfig, 'ENVIRONMENT').value('development');
 
     await bootstrap();
 
-    expect(cpSpawnStub).to.have.been.calledOnceWith(
-      'npx sequelize db:seed:all',
-    );
-  });
-
-  it('debug', async () => {
-    appConfig.ENVIRONMENT = 'debug';
-
-    await bootstrap();
-
-    expect(cpSpawnStub).to.have.been.calledOnceWith(
-      'npx sequelize db:seed:all --debug',
-    );
+    expect(containerStub).to.have.been.calledTwice;
   });
 
   it('production', async () => {
-    appConfig.ENVIRONMENT = 'production';
+    sandbox.stub(appConfig, 'ENVIRONMENT').value('production');
 
     await bootstrap();
 
-    expect(cpSpawnStub).to.not.have.been.called;
-    expect(loggerStub).callCount(2);
+    expect(containerStub).to.have.been.calledOnce;
+    expect(loggerSpy).to.have.been.calledTwice;
   });
 });

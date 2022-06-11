@@ -14,7 +14,7 @@ describe('db config tests', () => {
   it('should use default config', () => {
     restore = mockedEnv({ clear: true });
 
-    const dbConfig = proxyquire('../../../src/config/db.config', {});
+    const dbConfig = proxyquire('../../../src/config/db.config', {}).default;
 
     expect(dbConfig).to.have.property('host', 'postgres');
     expect(dbConfig).to.have.property('port', 5432);
@@ -32,7 +32,7 @@ describe('db config tests', () => {
       DB_PASS: 'password',
     });
 
-    const dbConfig = proxyquire('../../../src/config/db.config', {});
+    const dbConfig = proxyquire('../../../src/config/db.config', {}).default;
 
     expect(dbConfig).to.have.property('host', 'localhost');
     expect(dbConfig).to.have.property('port', 5433);

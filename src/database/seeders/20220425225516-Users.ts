@@ -1,33 +1,26 @@
 import { hash } from 'bcrypt';
-import { QueryInterface } from 'sequelize';
+import Migration from '../../models/types/migration.type';
 
-const seeder = {
-  async up(queryInterface: QueryInterface) {
-    await queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.insert(
-        null,
-        'users',
-        {
-          email: 'john.doe@domain.com',
-          password: await hash('1234567890', 10),
-        },
-        {
-          transaction,
-        },
-      );
-    });
-  },
-
-  async down(queryInterface: QueryInterface) {
-    await queryInterface.sequelize.transaction(async (transaction) => {
-      await queryInterface.delete(
-        null,
-        'users',
-        { email: 'john.doe@domain.com' },
-        { transaction },
-      );
-    });
-  },
+export const up: Migration = async ({ context: sequelize }) => {
+  await sequelize.transaction(async (transaction) => {
+    await sequelize.getQueryInterface().insert(
+      null,
+      'users',
+      {
+        email: 'john.doe@domain.com',
+        password: await hash('1234567890', 10),
+      },
+      {
+        transaction,
+      },
+    );
+  });
 };
 
-export default seeder;
+export const down: Migration = async ({ context: sequelize }) => {
+  await sequelize.transaction(async (transaction) => {
+    await sequelize
+      .getQueryInterface()
+      .delete(null, 'users', { email: 'john.doe@domain.com' }, { transaction });
+  });
+};
