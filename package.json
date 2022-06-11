@@ -90,5 +90,9 @@
   "lint-staged": {
     "*.ts": "eslint --cache --fix",
     "./**/*.ts": "prettier --write"
-  }
+  },
+  "nyc": {
+    "include": "src",
+    "exclude": "**/*.strategy.ts"
+}
 }
