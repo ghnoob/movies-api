@@ -12,6 +12,6 @@ describe('Seeder test', () => {
       }),
       seeder = new Seeder(umzugFactoryStub);
 
-    expect(await seeder.initialize()).to.equal([]);
+    expect(await seeder.initialize()).to.deep.equal([]);
   });
 });
