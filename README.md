@@ -32,8 +32,8 @@ You can access the Swagger UI page at `/docs`.
 
 ## Migrations
 
-You can run the migrations using `docker exec app yarn migrator run`.
-Also you can use `docker exec app yarn migrator -h` to get more useful commands.
+You can run the migrations using `docker-compose exec app yarn migrator run`.
+Also you can use `docker-compose exec app yarn migrator -h` to get more useful commands.
 
 Seeders are run automatically when you start the app in dev or debug mode.
 
