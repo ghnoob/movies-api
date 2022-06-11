@@ -3,6 +3,9 @@ import { Service } from 'typedi';
 import { Umzug } from 'umzug';
 import UmzugFactory from './umzug';
 
+/**
+ * Manager database seeding.
+ */
 @Service()
 export default class Seeder {
   private umzug: Umzug<Sequelize>;
@@ -11,6 +14,9 @@ export default class Seeder {
     this.umzug = umzugFactory.create('seeders/*.ts');
   }
 
+  /**
+   * Seeds the database.
+   */
   initialize() {
     return this.umzug.up();
   }
