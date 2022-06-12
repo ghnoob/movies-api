@@ -51,7 +51,7 @@ export default abstract class CommonRoutes {
   private basePath: string;
   protected router: Router;
 
-  public constructor(basePath = '') {
+  public constructor(basePath: string) {
     this.basePath = basePath;
     this.router = Router();
   }

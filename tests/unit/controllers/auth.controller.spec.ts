@@ -17,6 +17,20 @@ describe('auth controller tests', () => {
     res = mockRes(),
     next = stub();
 
+  const mockSign = stub();
+  const AuthControllerStubbed = proxyquire(
+    '../../../src/controllers/auth.controller',
+    {
+      jsonwebtoken: { sign: mockSign },
+    },
+  ).default;
+
+  let controller: AuthController;
+
+  beforeEach(() => {
+    controller = new AuthControllerStubbed();
+  });
+
   afterEach(() => {
     res.status.resetHistory();
     res.json.resetHistory();
@@ -24,8 +38,6 @@ describe('auth controller tests', () => {
   });
 
   describe('register', () => {
-    const controller = new AuthController();
-
     it('should emit an event an return correct response', async () => {
       await controller.register(req, res);
 
@@ -39,17 +51,6 @@ describe('auth controller tests', () => {
   });
 
   describe('login', () => {
-    const mockSign = stub();
-
-    const AuthControllerStubbed = proxyquire(
-      '../../../src/controllers/auth.controller',
-      {
-        jsonwebtoken: { sign: mockSign },
-      },
-    ).default;
-
-    const controller: AuthController = new AuthControllerStubbed();
-
     afterEach(() => {
       mockSign.reset();
     });
