@@ -109,4 +109,61 @@ describe('characters integration tests', () => {
       });
     });
   });
+
+  describe('/characters/:id', () => {
+    describe('get', () => {
+      it('should return 200 status code with a character', async () => {
+        const mockCharacter = sandbox.createStubInstance(Character);
+        mockCharacter.id = 1;
+        mockCharacter.name = 'Simba';
+        mockCharacter.age = 4;
+        mockCharacter.weight = 235;
+        mockCharacter.history = 'This is a placeholder';
+        mockCharacter.imageUrl = 'https://abcdef.com/image.png';
+        mockCharacter.movies = [];
+
+        sandbox.stub(Character, 'findByPk').resolves(mockCharacter);
+
+        const res = await request(app).get('/characters/1');
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body).to.deep.equal({
+          id: 1,
+          name: 'Simba',
+          age: 4,
+          weight: 235,
+          history: 'This is a placeholder',
+          imageUrl: 'https://abcdef.com/image.png',
+          movies: [],
+        });
+      });
+
+      it('should return a 400 status code', async () => {
+        const res = await request(app).get('/characters/abc');
+
+        expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+        expect(res.body)
+          .to.have.property('message')
+          .that.has.deep.property('errors', ['id must be a number string']);
+      });
+
+      it('should return a 404 status code', async () => {
+        sandbox.stub(Character, 'findByPk').resolves(null);
+
+        const res = await request(app).get('/characters/1');
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+
+      it('should return a 500 status code', async () => {
+        sandbox.stub(Character, 'findByPk').rejects(new Error());
+
+        const res = await request(app).get('/characters/1');
+
+        expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+    });
+  });
 });
