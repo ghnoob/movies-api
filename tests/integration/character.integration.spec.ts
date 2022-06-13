@@ -1,7 +1,12 @@
 import { expect, request, use } from 'chai';
 import chaiHttp from 'chai-http';
 import passport from 'passport';
-import { createSandbox, SinonSandbox, SinonStub } from 'sinon';
+import {
+  createSandbox,
+  SinonSandbox,
+  SinonStub,
+  SinonStubbedInstance,
+} from 'sinon';
 import app from '../../src/express';
 import Character from '../../src/models/character.model';
 import HttpStatus from '../../src/models/enums/http-status.enum';
@@ -163,6 +168,79 @@ describe('characters integration tests', () => {
         const res = await request(app).get('/characters/1');
 
         expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+      });
+    });
+
+    describe('patch', () => {
+      const body = { imageUrl: 'https://test.com/image.png' };
+
+      describe('authenticated', () => {
+        beforeEach(() => {
+          passportStub.yieldsAsync(null, { id: 1, email: 'abc@gmail.com' });
+        });
+
+        describe('character found', () => {
+          let mockCharacter: SinonStubbedInstance<Character>;
+
+          beforeEach(() => {
+            mockCharacter = sandbox.createStubInstance(Character);
+
+            sandbox.stub(Character, 'findByPk').resolves(mockCharacter);
+            mockCharacter.save.resolves(mockCharacter);
+          });
+
+          it('should return 200 status code', async () => {
+            const res = await request(app).patch('/characters/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.OK);
+          });
+
+          it('should return 400 status code', async () => {
+            const res = await request(app)
+              .patch('/characters/1')
+              .send({ imageUrl: 'abc' });
+
+            expect(res.status).to.equal(HttpStatus.BAD_REQUEST);
+
+            expect(res.body)
+              .to.have.property('message')
+              .that.has.deep.property('errors', [
+                'imageUrl must be an URL address',
+              ]);
+          });
+
+          it('should return 500 status code', async () => {
+            mockCharacter.save.rejects(new Error());
+
+            const res = await request(app).patch('/characters/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.INTERNAL_SERVER_ERROR);
+          });
+        });
+
+        describe('character not found', () => {
+          beforeEach(() => {
+            sandbox.stub(Character, 'findByPk').resolves(null);
+          });
+
+          it('should return a 404 status code', async () => {
+            const res = await request(app).patch('/characters/1').send(body);
+
+            expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+          });
+        });
+      });
+
+      describe('unauthenticated', () => {
+        beforeEach(() => {
+          passportStub.yieldsAsync(null, null);
+        });
+
+        it('should return 401 status code', async () => {
+          const res = await request(app).patch('/characters/1').send(body);
+
+          expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+        });
       });
     });
   });
