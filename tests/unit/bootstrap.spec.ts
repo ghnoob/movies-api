@@ -4,6 +4,7 @@ import { noCallThru } from 'proxyquire';
 import { Sequelize } from 'sequelize-typescript';
 import { createSandbox, SinonSandbox, SinonSpy, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
+import { QueryInterface } from 'sequelize';
 import appConfig from '../../src/config/app.config';
 import app from '../../src/express';
 import logger from '../../src/logger';
@@ -30,7 +31,9 @@ describe('bootstrap tests', () => {
       .onFirstCall()
       .returns(
         sandbox.createStubInstance(DbConnection, {
-          getConnection: sandbox.createStubInstance(Sequelize),
+          getConnection: sandbox.createStubInstance(Sequelize, {
+            getQueryInterface: sandbox.createStubInstance(QueryInterface),
+          }),
         }),
       )
       .onSecondCall()
