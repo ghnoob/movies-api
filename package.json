@@ -18,7 +18,8 @@
     "prepare": "husky install",
     "test": "NODE_ENV=test mocha --parallel -r ts-node/register \"tests/unit/**/*.spec.ts\"",
     "test:coverage": "nyc --reporter=text yarn test",
-    "test:integration": "NODE_ENV=test mocha --parallel -r reflect-metadata -r dotenv/config -r ts-node/register \"tests/integration/*.integration.spec.ts\""
+    "test:integration": "NODE_ENV=test mocha --parallel -r reflect-metadata -r dotenv/config -r ts-node/register \"tests/integration/*.integration.spec.ts\"",
+    "test:e2e": "NODE_ENV=test mocha --timeout 15000 --slow 1000 -r reflect-metadata -r dotenv/config -r ts-node/register \"tests/e2e/*.e2e.spec.ts\""
   },
   "dependencies": {
     "@sendgrid/mail": "7.7.0",
