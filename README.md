@@ -37,6 +37,12 @@ Also you can use `docker-compose exec app yarn migrator -h` to get more useful c
 
 Seeders are run automatically when you start the app in dev or debug mode.
 
+## E2E Testing
+
+This application uses the [sendmail.app](https://sendmail.app) API to check if the welcome
+email was sent successfully, so to run the e2e tests, you'll need an account in that service,
+and provide an API key and a namespace in the .env file
+
 ## Info
 
 ### Author

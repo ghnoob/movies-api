@@ -1,9 +1,4 @@
-import 'reflect-metadata';
-import { config } from 'dotenv';
 import { Container } from 'typedi';
-
-config();
-
 import DbConnection from './database/connection';
 import app from './express';
 import appConfig from './config/app.config';
