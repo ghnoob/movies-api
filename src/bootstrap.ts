@@ -11,7 +11,8 @@ export default async function bootstrap() {
   await db.authenticate();
 
   if (appConfig.ENVIRONMENT !== 'production') {
-    await db.sync({ force: true });
+    await db.getQueryInterface().dropAllTables();
+    await db.sync();
 
     await Container.get(Seeder).initialize();
   }
