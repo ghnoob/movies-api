@@ -7,6 +7,7 @@ import DbConnection from '../../src/database/connection';
 import Seeder from '../../src/database/seeder';
 import app from '../../src/express';
 import HttpStatus from '../../src/models/enums/http-status.enum';
+import e2eConfig from './config';
 
 use(chaiHttp);
 
@@ -16,17 +17,60 @@ describe('auth e2e tests', () => {
   before(async () => {
     db = Container.get(DbConnection).getConnection();
     await db.authenticate();
-    await db.sync({ force: true });
 
     seeder = Container.get(Seeder);
   });
 
   beforeEach(async () => {
+    await db.sync({ force: true });
     await seeder.initialize();
   });
 
   afterEach(async () => {
-    await seeder.revert();
+    await db.getQueryInterface().dropAllTables();
+  });
+
+  describe('register', () => {
+    it('should return a 201 status code and send an email', async () => {
+      const timestamp = Date.now(),
+        email = `${e2eConfig.TESTMAIL_NAMESPACE}.${timestamp}@inbox.testmail.app`;
+
+      const [appResponse, mailResponse] = await Promise.all([
+        request(app).post('/auth/register').send({
+          email,
+          password: 'abcDEF123!',
+          passwordConfirmation: 'abcDEF123!',
+        }),
+
+        request('https://api.testmail.app').get('/api/json').query({
+          apikey: e2eConfig.TESTMAIL_API_KEY,
+          namespace: e2eConfig.TESTMAIL_NAMESPACE,
+          tag: timestamp,
+          livequery: true,
+        }),
+      ]);
+
+      expect(appResponse.status).to.equal(HttpStatus.CREATED);
+      expect(await appResponse.body).to.deep.equal({
+        user: {
+          id: 2,
+          email,
+        },
+      });
+
+      expect(mailResponse.status).to.equal(HttpStatus.OK);
+      expect(mailResponse.body).to.have.property('count', 1);
+    });
+
+    it('should return a 409 status code', async () => {
+      const res = await request(app).post('/auth/register').send({
+        email: 'john.doe@domain.com',
+        password: 'abcDEF123!',
+        passwordConfirmation: 'abcDEF123!',
+      });
+
+      expect(res.status).to.equal(HttpStatus.CONFLICT);
+    });
   });
 
   describe('login', () => {
