@@ -41,6 +41,99 @@ describe('characters e2e tests', () => {
   });
 
   describe('/characters', () => {
+    describe('get', () => {
+      it('without filters', async () => {
+        const res = await request(app).get('/characters');
+
+        const count = await Character.count();
+
+        expect(res.status).to.equal(HttpStatus.OK);
+        expect(res.body).to.have.property('total', count);
+
+        expect(res.body)
+          .to.have.property('data')
+          .that.is.an('array')
+          .and.has.length(count);
+      });
+
+      it('pagination', async () => {
+        const res = await request(app)
+          .get('/characters')
+          .query({ page: '2', limit: '2' });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body)
+          .to.have.property('data')
+          .that.is.an('array')
+          .and.has.length(2);
+      });
+
+      it('all filters', async () => {
+        const res = await request(app)
+          .get('/characters')
+          .query({
+            name: 'darth vader',
+            age: '45',
+            weight: { lte: '250' },
+            movies: ['1', '3'],
+          });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body)
+          .to.have.property('data')
+          .that.is.an('array')
+          .and.has.length(1);
+
+        expect(res.body.data[0]).to.have.property('id', 4);
+      });
+
+      it('should return empty data on invalid age or weight', async () => {
+        const res = await request(app)
+          .get('/characters')
+          .query({
+            age: 'abc',
+            weight: { lte: 'def' },
+          });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body)
+          .to.have.property('data')
+          .that.is.an('array')
+          .and.has.length(0);
+      });
+
+      it('should consider invalid movies query param values as null', async () => {
+        const res = await request(app)
+          .get('/characters')
+          .query({
+            movies: ['abc', '1'], // transforms to [null, 1]
+          });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        /**
+         * Returns characters that appear in movies with id null or 1.
+         * Since there are no movies with id = null, returns only characters
+         * of movie id 1.
+         */
+        expect(res.body)
+          .to.have.property('data')
+          .that.is.an('array')
+          .and.has.length(2);
+
+        expect(
+          res.body.data.every(
+            (character: Character) =>
+              character.movies.length > 0 &&
+              character.movies.some((movie) => movie.id === 1),
+          ),
+        ).to.be.true;
+      });
+    });
+
     describe('post', () => {
       it('should create a new character', async () => {
         const countBeforeCreate = await Character.count();
