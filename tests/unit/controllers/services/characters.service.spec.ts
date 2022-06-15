@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { col, fn, literal, Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { createSandbox, match, SinonSandbox, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import CharactersService from '../../../../src/controllers/services/characters.service';
@@ -51,28 +51,8 @@ describe('characters service tests', () => {
       expect(mockFindAndCountAll).to.have.been.calledWithMatch({
         limit: 1,
         offset: 0,
-        where: { [Op.and]: match.array },
+        where: { [Op.and]: match.array.and(match.has('length', 4)) },
       });
-
-      const conditions = (
-        mockFindAndCountAll.getCall(0).args[0].where as { [Op.and]: object }
-      )[Op.and];
-
-      expect(conditions).to.have.deep.members([
-        where(fn('to_tsvector', col('name')), {
-          [Op.match]: fn('plainto_tsquery', dto.name),
-        }),
-        { age: { [Op.and]: [{ [Op.gt]: 3 }, { [Op.not]: null }] } },
-        { weight: { [Op.and]: [{ [Op.lt]: 200 }, { [Op.not]: null }] } },
-        {
-          id: {
-            [Op.in]: literal(`(
-          SELECT "characterId" FROM "movies-characters"
-          WHERE "movieId" IN ( 1 )
-        )`),
-          },
-        },
-      ]);
     });
 
     it('empty parameters', async () => {
