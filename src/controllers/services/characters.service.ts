@@ -43,7 +43,7 @@ export default class CharactersService {
     if (dto.movies && dto.movies.length > 0) {
       const subQuery = `(
         SELECT "characterId" FROM "movies-characters"
-        WHERE "movieId" IN ( ${dto.movies.join(',')} )
+        WHERE "movieId" IN (:movies)
       )`;
 
       conditions.push({ id: { [Op.in]: literal(subQuery) } });
@@ -57,6 +57,7 @@ export default class CharactersService {
 
     const { count, rows } = await Character.findAndCountAll({
       attributes: ['id', 'name', 'imageUrl'],
+      replacements: { movies: dto.movies },
       where: { [Op.and]: conditions },
       limit,
       offset: skip,
