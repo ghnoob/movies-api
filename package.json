@@ -95,5 +95,5 @@
   "nyc": {
     "include": "src",
     "exclude": "**/*.strategy.ts"
-}
+  }
 }

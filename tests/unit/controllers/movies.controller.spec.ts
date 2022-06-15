@@ -348,14 +348,12 @@ describe('movies controller tests', () => {
         await controller.removeCharacter(req, res, next);
 
         expect(next).to.have.been.calledOnceWithExactly(
-          match
-            .instanceOf(HttpError)
-            .and(
-              match({
-                status: HttpStatus.NOT_FOUND,
-                response: 'Movie not found.',
-              }),
-            ),
+          match.instanceOf(HttpError).and(
+            match({
+              status: HttpStatus.NOT_FOUND,
+              response: 'Movie not found.',
+            }),
+          ),
         );
       });
 
@@ -365,14 +363,12 @@ describe('movies controller tests', () => {
         await controller.removeCharacter(req, res, next);
 
         expect(next).to.have.been.calledOnceWithExactly(
-          match
-            .instanceOf(HttpError)
-            .and(
-              match({
-                status: HttpStatus.NOT_FOUND,
-                response: 'Character not found.',
-              }),
-            ),
+          match.instanceOf(HttpError).and(
+            match({
+              status: HttpStatus.NOT_FOUND,
+              response: 'Character not found.',
+            }),
+          ),
         );
       });
     });
