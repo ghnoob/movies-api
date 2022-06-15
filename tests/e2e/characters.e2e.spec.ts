@@ -124,13 +124,8 @@ describe('characters e2e tests', () => {
           .that.is.an('array')
           .and.has.length(2);
 
-        expect(
-          res.body.data.every(
-            (character: Character) =>
-              character.movies.length > 0 &&
-              character.movies.some((movie) => movie.id === 1),
-          ),
-        ).to.be.true;
+        expect(res.body.data[0].id).to.equal(1);
+        expect(res.body.data[1].id).to.equal(2);
       });
     });
 
