@@ -1,5 +1,5 @@
 import { expect, use } from 'chai';
-import { col, fn, Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { createSandbox, match, SinonSandbox, SinonStub } from 'sinon';
 import sinonChai from 'sinon-chai';
 import Movie from '../../../../src/models/movie.model';
@@ -53,19 +53,8 @@ describe('movies service tests', () => {
         limit: 5,
         offset: 10,
         order: [['createdAt', 'DESC']],
-        where: { [Op.and]: match.array },
+        where: { [Op.and]: match.array.and(match.has('length', 2)) },
       });
-
-      const conditions = (
-        mockFindAndCountAll.getCall(0).args[0].where as { [Op.and]: object }
-      )[Op.and];
-
-      expect(conditions).to.have.deep.members([
-        where(fn('to_tsvector', col('title')), {
-          [Op.match]: fn('plainto_tsquery', 'star wars'),
-        }),
-        { genreId: 1 },
-      ]);
     });
 
     it('empty parameters', async () => {
