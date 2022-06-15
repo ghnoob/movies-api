@@ -43,6 +43,8 @@ This application uses the [sendmail.app](https://sendmail.app) API to check if t
 email was sent successfully, so to run the e2e tests, you'll need an account in that service,
 and provide an API key and a namespace in the .env file
 
+Then you can use `docker-compose run --rm app yarn test:e2e` to run the e2e tests.
+
 ## Info
 
 ### Author
