@@ -152,4 +152,75 @@ describe('characters e2e tests', () => {
       });
     });
   });
+
+  describe('/characters/:id', () => {
+    describe('get', () => {
+      it('should return character details', async () => {
+        const res = await request(app).get('/characters/5');
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body).to.deep.equal({
+          id: 5,
+          name: 'Luke Skywalker',
+          imageUrl:
+            'https://static.wikia.nocookie.net/esstarwars/images/d/d9/Luke-rotjpromo.jpg/revision/latest/scale-to-width-down/350?cb=20071214134433',
+          age: 22,
+          weight: 73,
+          history:
+            "Originally a farmer on Tatooine living with his uncle and aunt, Luke becomes a pivotal figure in the Rebel Alliance's struggle against the Galactic Empire.The son of fallen Jedi Knight Anakin Skywalker(turned Sith Lord Darth Vader) and Padmé Amidala, Luke is the twin brother of Rebellion leader Princess Leia and eventual brother-in -law of the smuggler Han Solo.Luke trains to be a Jedi under Jedi Masters Obi - Wan Kenobi and Yoda and rebuilds the Jedi Order.",
+          movies: [
+            {
+              id: 3,
+              title: 'Star Wars: Episode V - The Empire Strikes Back',
+              imageUrl:
+                'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Empire_Strikes_Back_%281980_film%29.jpg',
+            },
+          ],
+        });
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app).get('/characters/999');
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
+
+    describe('update', () => {
+      it('should return 200 status code', async () => {
+        const res = await request(app)
+          .patch('/characters/5')
+          .set('Authorization', bearerToken)
+          .send({ name: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        // check that chracter exists
+        const character = await Character.findOne({
+          where: { id: 5, name: 'test' },
+          attributes: ['id'],
+        });
+
+        expect(character).to.not.be.null;
+      });
+
+      it('should return a 401 status code', async () => {
+        const res = await request(app)
+          .patch('/characters/5')
+          .send({ name: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app)
+          .patch('/characters/999')
+          .set('Authorization', bearerToken)
+          .send({ name: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
+  });
 });
