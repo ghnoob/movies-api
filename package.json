@@ -94,6 +94,10 @@
   },
   "nyc": {
     "include": "src",
-    "exclude": "**/*.strategy.ts"
+    "exclude": [
+      "**/*.strategy.ts",
+      "**/migrations/*.ts",
+      "**/seeders/*.ts"
+    ]
   }
 }
