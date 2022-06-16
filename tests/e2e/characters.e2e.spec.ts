@@ -222,5 +222,35 @@ describe('characters e2e tests', () => {
         expect(res.status).to.equal(HttpStatus.NOT_FOUND);
       });
     });
+
+    describe('delete', () => {
+      it('should return 200 status code', async () => {
+        const res = await request(app)
+          .delete('/characters/5')
+          .set('Authorization', bearerToken);
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        const character = await Character.findByPk(5, {
+          attributes: ['id'],
+        });
+
+        expect(character).to.be.null;
+      });
+
+      it('should return a 401 status code', async () => {
+        const res = await request(app).delete('/characters/5');
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app)
+          .delete('/characters/999')
+          .set('Authorization', bearerToken);
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
   });
 });
