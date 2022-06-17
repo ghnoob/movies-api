@@ -285,4 +285,50 @@ describe('movies e2e tests', () => {
       });
     });
   });
+
+  describe('POST /movies/:id/characters', () => {
+    it('should return a 201 status code', async () => {
+      const res = await request(app)
+        .post('/movies/1/characters')
+        .set('Authorization', bearerToken)
+        .send({ characterId: 3 });
+
+      expect(res.status).to.equal(HttpStatus.CREATED);
+    });
+
+    it('should return 401 status code', async () => {
+      const res = await request(app)
+        .post('/movies/1/characters')
+        .send({ characterId: 3 });
+
+      expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return a 409 status code', async () => {
+      const res = await request(app)
+        .post('/movies/1/characters')
+        .set('Authorization', bearerToken)
+        .send({ characterId: 1 });
+
+      expect(res.status).to.equal(HttpStatus.CONFLICT);
+    });
+
+    it('should return a 422 status code', async () => {
+      const res = await request(app)
+        .post('/movies/1/characters')
+        .set('Authorization', bearerToken)
+        .send({ characterId: 99 });
+
+      expect(res.status).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+    });
+
+    it('should return a 404 status code', async () => {
+      const res = await request(app)
+        .post('/movies/99/characters')
+        .set('Authorization', bearerToken)
+        .send({ characterId: 1 });
+
+      expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+    });
+  });
 });
