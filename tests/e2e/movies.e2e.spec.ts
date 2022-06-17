@@ -214,5 +214,49 @@ describe('movies e2e tests', () => {
         expect(res.status).to.equal(HttpStatus.NOT_FOUND);
       });
     });
+
+    describe('patch', () => {
+      it('should return 200 status code', async () => {
+        const res = await request(app)
+          .patch('/movies/1')
+          .set('Authorization', bearerToken)
+          .send({ title: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(
+          await Movie.findOne({
+            attributes: ['id'],
+            where: { id: 1, title: 'test' },
+          }),
+        ).to.not.be.null;
+      });
+
+      it('should return 401 status code', async () => {
+        const res = await request(app)
+          .patch('/movies/1')
+          .send({ title: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+      });
+
+      it('should return 422 status code', async () => {
+        const res = await request(app)
+          .patch('/movies/1')
+          .set('Authorization', bearerToken)
+          .send({ genreId: 99 });
+
+        expect(res.status).to.equal(HttpStatus.UNPROCESSABLE_ENTITY);
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app)
+          .patch('/movies/99')
+          .set('Authorization', bearerToken)
+          .send({ title: 'test' });
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
   });
 });
