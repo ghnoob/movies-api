@@ -170,4 +170,49 @@ describe('movies e2e tests', () => {
       });
     });
   });
+
+  describe('/movies/:id', () => {
+    describe('get', () => {
+      it('should return 200 status code with a movie', async () => {
+        const res = await request(app).get('/movies/1');
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(res.body).to.deep.equal({
+          id: 1,
+          title: 'Snow White and the Seven Dwarfs',
+          genre: {
+            id: 7,
+            name: 'Fantasy',
+            imageUrl:
+              'https://st.depositphotos.com/1956729/1826/i/600/depositphotos_18265217-stock-photo-alien-world-in-winter.jpg',
+          },
+          imageUrl:
+            'https://upload.wikimedia.org/wikipedia/commons/b/b0/Snow_white_1937_trailer_screenshot.jpg',
+          rating: 4.3,
+          createdAt: new Date(1937, 12, 21).toISOString(),
+          characters: [
+            {
+              id: 1,
+              name: 'Snow White',
+              imageUrl:
+                'https://static.wikia.nocookie.net/disney/images/3/33/Profile_-_Snow_White.jpeg/revision/latest/scale-to-width-down/782?cb=20200916135241',
+            },
+            {
+              id: 2,
+              name: 'Magic Mirror',
+              imageUrl:
+                'https://static.wikia.nocookie.net/disney/images/f/f9/Snowwhite-disneyscreencaps.com-100.jpg/revision/latest/scale-to-width-down/223?cb=20201125093643',
+            },
+          ],
+        });
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app).get('/movies/99');
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
+  });
 });
