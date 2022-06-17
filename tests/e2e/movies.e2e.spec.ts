@@ -258,5 +258,31 @@ describe('movies e2e tests', () => {
         expect(res.status).to.equal(HttpStatus.NOT_FOUND);
       });
     });
+
+    describe('delete', () => {
+      it('should return a 200 status code', async () => {
+        const res = await request(app)
+          .delete('/movies/1')
+          .set('Authorization', bearerToken);
+
+        expect(res.status).to.equal(HttpStatus.OK);
+
+        expect(await Movie.findByPk(1)).to.be.null;
+      });
+
+      it('should return 401 status code', async () => {
+        const res = await request(app).delete('/movies/1');
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+      });
+
+      it('should return a 404 status code', async () => {
+        const res = await request(app)
+          .delete('/movies/999')
+          .set('Authorization', bearerToken);
+
+        expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+      });
+    });
   });
 });
