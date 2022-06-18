@@ -331,4 +331,40 @@ describe('movies e2e tests', () => {
       expect(res.status).to.equal(HttpStatus.NOT_FOUND);
     });
   });
+
+  describe('DELETE /movies/:idMovie/characters/:idCharacter', () => {
+    it('should return a 200 status code', async () => {
+      const res = await request(app)
+        .delete('/movies/1/characters/1')
+        .set('Authorization', bearerToken);
+
+      expect(res.status).to.equal(HttpStatus.OK);
+    });
+
+    it('should return a 401 status code', async () => {
+      const res = await request(app).delete('/movies/1/characters/1');
+
+      expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should return a 404 status code - movie not found', async () => {
+      const res = await request(app)
+        .delete('/movies/99/characters/1')
+        .set('Authorization', bearerToken);
+
+      expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+
+      expect(res.body).to.have.property('message', 'Movie not found.');
+    });
+
+    it('should return a 404 status code - character not found', async () => {
+      const res = await request(app)
+        .delete('/movies/1/characters/99')
+        .set('Authorization', bearerToken);
+
+      expect(res.status).to.equal(HttpStatus.NOT_FOUND);
+
+      expect(res.body).to.have.property('message', 'Character not found.');
+    });
+  });
 });
