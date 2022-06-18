@@ -502,5 +502,17 @@ describe('/movies integration test', () => {
         });
       });
     });
+
+    describe('unauthenticated', () => {
+      beforeEach(() => {
+        passportStub.yieldsAsync(null, null);
+      });
+
+      it('should return 401 status code', async () => {
+        const res = await request(app).delete('/movies/1/characters/1');
+
+        expect(res.status).to.equal(HttpStatus.UNAUTHORIZED);
+      });
+    });
   });
 });
