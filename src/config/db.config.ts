@@ -14,6 +14,12 @@ const dbConfig: SequelizeOptions = {
   password: process.env.DB_PASS || 'admin',
   logging: logger.debug.bind(logger),
   models: [join(__dirname, '..', 'models')],
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 };
 
 export default dbConfig;

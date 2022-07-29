@@ -31,7 +31,7 @@ describe('app config tests', () => {
   it('should use provided env variables', () => {
     restore = mockedEnv({
       NODE_ENV: 'debug',
-      SERVER_PORT: '5500',
+      PORT: '5500',
       JWT_SECRET_KEY: 'abcdef',
       SENDGRID_API_KEY: 'SG.abcdef',
       SENDGRID_EMAIL: 'abc@def.com',
