@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "lint": "eslint --fix .",
     "migrator": "ts-node ./src/scripts/migrator.ts",
-    "start": "yarn build && node dist/server.js",
+    "start": "yarn build && node dist/index.js",
     "start:dev": "NODE_ENV=development ts-node-dev --respawn ./src/index.ts",
     "start:debug": "NODE_ENV=debug ts-node-dev --transpile-only --respawn --inspect=9229 src/index.ts",
     "prepare": "husky install",
