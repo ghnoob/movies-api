@@ -44,6 +44,7 @@
     "swagger-jsdoc": "6.2.1",
     "swagger-ui-express": "4.3.0",
     "typedi": "0.10.0",
+    "typescript": "4.6.3",
     "umzug": "3.1.1",
     "validator": "13.7.0",
     "winston": "3.7.2"
@@ -84,8 +85,7 @@
     "sinon-chai": "3.7.0",
     "sinon-express-mock": "2.2.1",
     "ts-node": "10.7.0",
-    "ts-node-dev": "1.1.8",
-    "typescript": "4.6.3"
+    "ts-node-dev": "1.1.8"
   },
   "lint-staged": {
     "*.{ts,js}": "eslint --fix",
