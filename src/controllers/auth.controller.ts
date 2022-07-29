@@ -61,7 +61,9 @@ export default class AuthController {
    * Logs in to a created account.
    */
   login(req: Request, res: Response): Response {
-    const token = sign({ user: req.user }, appConfig.JWT_SECRET_KEY);
+    const token = sign({ user: req.user }, appConfig.JWT_SECRET_KEY, {
+      expiresIn: '1h',
+    });
 
     return res.status(HttpStatus.OK).json({ token });
   }
