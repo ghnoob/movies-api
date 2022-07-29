@@ -20,7 +20,7 @@ describe('app config tests', () => {
     );
 
     expect(appConfig).to.deep.equal({
-      ENVIRONMENT: 'development',
+      ENVIRONMENT: 'production',
       PORT: 3000,
       JWT_SECRET_KEY: 'default',
       SENDGRID_API_KEY: '',
