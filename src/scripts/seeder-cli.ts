@@ -3,7 +3,5 @@ import { Container } from 'typedi';
 import UmzugFactory from '../database/umzug';
 
 if (require.main === module) {
-  Container.get(UmzugFactory)
-    .create('../database/migrations/*.{t,j}s')
-    .runAsCLI();
+  Container.get(UmzugFactory).create('../database/seeders/*.{t,j}s').runAsCLI();
 }
