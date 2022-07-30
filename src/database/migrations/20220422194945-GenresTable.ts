@@ -16,6 +16,7 @@ export const up: Migration = async ({ context: sequelize }) => {
           autoIncrementIdentity: true,
         },
         name: DataTypes.STRING(30),
+        imageUrl: DataTypes.STRING(2048),
       },
       {
         transaction,
