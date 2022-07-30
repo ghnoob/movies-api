@@ -18,13 +18,13 @@ const swaggerConfig: Options = {
     },
   },
   apis: [
-    join(__dirname, '..', 'controllers', '*.controller.ts'),
-    join(__dirname, '..', 'errors', '*.error.ts'),
-    join(__dirname, '..', 'middlewares', '*.middleware.ts'),
-    join(__dirname, '..', 'models', '*.model.ts'),
-    join(__dirname, '..', 'models', 'types', '*.type.ts'),
-    join(__dirname, '..', 'models', 'dto', '**', '*.dto.ts'),
-    join(__dirname, '..', 'routes', '*.routes.ts'),
+    join(__dirname, '..', 'controllers', '*.controller.{t,j}s'),
+    join(__dirname, '..', 'errors', '*.error.{t,j}s'),
+    join(__dirname, '..', 'middlewares', '*.middleware.{t,j}s'),
+    join(__dirname, '..', 'models', '*.model.{t,j}s'),
+    join(__dirname, '..', 'models', 'types', '*.type.{t,j}s'),
+    join(__dirname, '..', 'models', 'dto', '**', '*.dto.{t,j}s'),
+    join(__dirname, '..', 'routes', '*.routes.{t,j}s'),
   ],
 };
 

@@ -5,5 +5,7 @@ import UmzugFactory from '../database/umzug';
 if (require.main === module) {
   config();
 
-  Container.get(UmzugFactory).create('../database/migrations/*.ts').runAsCLI();
+  Container.get(UmzugFactory)
+    .create('../database/migrations/*.{t,j}s')
+    .runAsCLI();
 }
